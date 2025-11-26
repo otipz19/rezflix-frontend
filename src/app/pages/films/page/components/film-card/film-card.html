@@ -1,0 +1,13 @@
+<div class="block rounded-lg border bg-card text-card-foreground shadow-sm w-full">
+
+  <img src="/no-film-poster.png" alt="Film poster" class="rounded-t-lg h-auto max-h-64 w-full"/>
+
+  <div class="my-4 px-6">
+    <h3 class="font-bold text-base line-clamp-1">{{ film().title }}</h3>
+
+    <div class="mt-2 flex flex-row items-center gap-1">
+      <img src="/star.svg" alt="Star icon" class="size-4 object-contain"/>
+      <p class="font-bold text-base">{{ film().totalRating }}</p>
+    </div>
+  </div>
+</div>

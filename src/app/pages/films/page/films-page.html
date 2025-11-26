@@ -1,1 +1,26 @@
-<p>films-page works!</p>
+<div class="w-full max-w-7xl mx-auto p-4">
+  <header class="flex flex-col justify-between items-center">
+    <img src="/logo.png" alt="Logo" />
+
+    <img src="/hero-banner.png" alt="Hero Banner" />
+
+    <h1 class="mx-auto max-w-4xl text-center text-5xl font-bold leading-tight tracking-[-1%] sm:text-[64px] sm:leading-[76px]">
+      Find Your Favorite <span class="bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent">Movie</span>
+    </h1>
+
+    <!-- Search Bar Component -->
+  </header>
+
+  <section class="mt-16 w-full">
+    <h2 class="mb-8 w-fit mx-auto text-2xl font-bold sm:text-3xl">
+      All Movies
+    </h2>
+
+    <div class="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      @for (film of films(); track film.id) {
+        <app-film-card [film]="film"/>
+      }
+    </div>
+  </section>
+</div>
+

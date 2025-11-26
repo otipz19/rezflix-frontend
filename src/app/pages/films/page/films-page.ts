@@ -1,11 +1,15 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, Signal} from '@angular/core';
 import {FilmsPageStore} from './state/store';
 import {injectDispatch} from '@ngrx/signals/events';
 import {filmsPageEvents} from './state/events';
+import {FilmDto} from '../../../api';
+import {FilmCard} from './components/film-card/film-card';
 
 @Component({
   selector: 'app-films-page',
-  imports: [],
+  imports: [
+    FilmCard
+  ],
   templateUrl: './films-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FilmsPageStore]
@@ -13,6 +17,8 @@ import {filmsPageEvents} from './state/events';
 export class FilmsPage implements OnInit {
   private readonly store = inject(FilmsPageStore);
   private readonly dispatch = injectDispatch(filmsPageEvents);
+
+  protected readonly films: Signal<FilmDto[]> = this.store.films;
 
   ngOnInit() {
     this.dispatch.opened();
