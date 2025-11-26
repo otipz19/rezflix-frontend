@@ -1,0 +1,12 @@
+{
+  "modelMutable": false,
+  "removeEnumValuePrefix": true,
+  "stringEnums": true,
+  "enumPropertyNaming": "UPPERCASE",
+  "supportsES6": true,
+  "nullSafeAdditionalProps": true,
+  "outputDir": "src/app/api",
+  "generator-name": "typescript-angular",
+  "useBearerAuthentication": true,
+  "additionalProperties": {}
+}
