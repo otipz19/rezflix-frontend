@@ -1,9 +1,19 @@
-import { ZardFormFieldComponent, ZardFormLabelComponent, ZardFormControlComponent } from '@shared/zardui/components/form/form.component';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ZardButtonComponent } from '@shared/zardui/components/button/button.component';
-import { ZardInputDirective } from '@shared/zardui/components/input/input.directive';
-import { ZardCardComponent } from '@shared/zardui/components/card/card.component';
-import { Component, signal } from '@angular/core';
+import {
+  ZardFormFieldComponent,
+  ZardFormLabelComponent,
+  ZardFormControlComponent
+} from '@shared/zardui/components/form/form.component';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
+import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
+import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
+import {Component, inject} from '@angular/core';
+import {AuthService} from '../../../auth/services/auth.service';
+import {ControlsOf} from '@shared/utils/forms/controls-of';
+import {LoginRequestDto} from '../../../api';
+import {checkValidFormSubmit$} from '@shared/utils/forms/check-valid-form-submit';
+import {switchMap} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -20,10 +30,25 @@ import { Component, signal } from '@angular/core';
   templateUrl: './login.page.html',
 })
 export class LoginPage {
-  protected readonly isLoading = signal(false);
+  private readonly fb = inject(FormBuilder).nonNullable;
+  private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
 
-  protected readonly loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
+  protected readonly loginForm = this.fb.group<ControlsOf<LoginRequestDto>>({
+    username: this.fb.control('', [Validators.required]),
+    password: this.fb.control('', [Validators.required]),
   });
+
+  protected onSubmit() {
+    checkValidFormSubmit$(this.loginForm)
+      .pipe(
+        switchMap(() => {
+          const loginDto = this.loginForm.getRawValue();
+          return this.auth.login$(loginDto);
+        })
+      )
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
+  }
 }

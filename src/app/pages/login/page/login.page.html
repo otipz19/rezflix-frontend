@@ -7,11 +7,11 @@
       </div>
 
       <z-card class="p-4 sm:p-6 lg:p-8">
-        <form [formGroup]="loginForm" class="space-y-4 sm:space-y-6">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
           <z-form-field>
             <z-form-label [zRequired]="true">Username</z-form-label>
             <z-form-control>
-              <input z-input type="text" formControlName="username" placeholder="haskell" class="w-full" />
+              <input z-input type="text" [formControl]="loginForm.controls.username" placeholder="haskell" class="w-full" />
             </z-form-control>
           </z-form-field>
 
@@ -20,11 +20,11 @@
               <z-form-label [zRequired]="true">Password</z-form-label>
             </div>
             <z-form-control>
-              <input z-input type="password" formControlName="password" placeholder="••••••••" class="w-full" />
+              <input z-input type="password" [formControl]="loginForm.controls.password" placeholder="••••••••" class="w-full" />
             </z-form-control>
           </z-form-field>
 
-          <button type="submit" z-button zFull [zLoading]="isLoading()" [disabled]="isLoading()">Log in</button>
+          <button type="submit" z-button zFull [zLoading]="auth.isLoadingUser()" [disabled]="auth.isLoadingUser()">Log in</button>
         </form>
       </z-card>
 

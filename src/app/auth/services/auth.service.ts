@@ -2,7 +2,13 @@ import {computed, inject, Injectable, signal} from "@angular/core";
 import {catchError, EMPTY, map, Observable, switchMap, tap, throwError} from "rxjs";
 import {HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {AuthenticationControllerService, CurrentUserInfoDto, UserControllerService, UserRoleDto} from '../../api';
+import {
+  AuthenticationControllerService,
+  CurrentUserInfoDto,
+  LoginRequestDto,
+  UserControllerService,
+  UserRoleDto
+} from '../../api';
 import {SKIP_AUTH_INTERCEPTOR} from '../interceptors/auth.interceptor';
 import {voidOperator} from '@shared/utils/void-operator';
 
@@ -26,6 +32,9 @@ export class AuthService {
   private readonly _currentUser = signal<CurrentUserInfoDto | undefined>(undefined);
   readonly currentUser = this._currentUser.asReadonly();
 
+  private readonly _isLoadingUser = signal(false);
+  readonly isLoadingUser = this._isLoadingUser.asReadonly();
+
   readonly isAuthenticated = computed(() => {
     const user = this.currentUser();
     return Boolean(user && user.role !== UserRoleDto.ANONYMOUS);
@@ -48,13 +57,16 @@ export class AuthService {
     return Boolean(role && roles.includes(role));
   }
 
-  login$(username: string, password: string): Observable<void> {
-    return this.authApi.login({username, password})
+  login$(loginDto: LoginRequestDto): Observable<void> {
+    this._isLoadingUser.set(true);
+
+    return this.authApi.login(loginDto)
       .pipe(
         tap(({accessToken, refreshToken}) => {
           this.setTokens(accessToken, refreshToken);
         }),
         switchMap(() => this.setCurrentUser$()),
+        tap(() => this._isLoadingUser.set(false))
       );
   }
 
@@ -63,6 +75,8 @@ export class AuthService {
     if (!fromLs) {
       return EMPTY;
     }
+
+    this._isLoadingUser.set(true);
 
     this._tokensDto = JSON.parse(fromLs);
     return this.setCurrentUser$()
@@ -74,7 +88,7 @@ export class AuthService {
           }
           return throwError(() => error);
         }),
-        voidOperator()
+        tap(() => this._isLoadingUser.set(false)),
       );
   }
 
@@ -108,7 +122,7 @@ export class AuthService {
       )
   }
 
-  unLogin() {
+  logout() {
     this.closeSession();
     this.router.navigate(['/']);
   }
