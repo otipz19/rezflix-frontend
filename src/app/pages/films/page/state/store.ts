@@ -22,7 +22,7 @@ export const FilmsPageStore = signalStore(
     isLoading: false,
     searchQuery: '',
     pageIndex: 0,
-    pageSize: 5
+    pageSize: 8
   }),
 
   withReducer(
