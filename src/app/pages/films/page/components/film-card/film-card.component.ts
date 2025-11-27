@@ -5,9 +5,9 @@ import {FilmDto} from '../../../../../api';
   selector: 'app-film-card',
   imports: [
   ],
-  templateUrl: './film-card.html',
+  templateUrl: './film-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilmCard {
+export class FilmCardComponent {
   readonly film = input.required<FilmDto>();
 }

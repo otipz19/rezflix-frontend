@@ -10,19 +10,26 @@ type FilmsPageState = {
   films: Array<FilmDto>,
   total: number,
   isLoading: boolean,
+  searchQuery: string
 };
 
 export const FilmsPageStore = signalStore(
   withState<FilmsPageState>({
     films: [],
     total: 0,
-    isLoading: false
+    isLoading: false,
+    searchQuery: ''
   }),
 
   withReducer(
     on(
       filmsPageEvents.opened,
       () => ({isLoading: true})
+    ),
+
+    on(
+      filmsPageEvents.searchQueryChanged,
+      ({payload: searchQuery}) => ({isLoading: true, searchQuery})
     ),
 
     on(
@@ -41,11 +48,13 @@ export const FilmsPageStore = signalStore(
     events = inject(Events),
     api = inject(FilmControllerService)
   ) => ({
-    onOpened$: events
-      .on(filmsPageEvents.opened)
+    loadFilmsList$: events
+      .on(filmsPageEvents.opened, filmsPageEvents.searchQueryChanged)
       .pipe(
         switchMap(() => {
-          return api.getFilmsByCriteria({})
+          const query = store.searchQuery();
+
+          return api.getFilmsByCriteria({query})
             .pipe(
               mapResponse({
                 next: res => filmsPageEvents.fetchListSuccess(res),
