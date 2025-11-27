@@ -1,5 +1,5 @@
 import {computed, inject, Injectable, signal} from "@angular/core";
-import {catchError, EMPTY, map, Observable, switchMap, tap, throwError} from "rxjs";
+import {catchError, EMPTY, finalize, map, Observable, switchMap, tap, throwError} from "rxjs";
 import {HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../api';
 import {SKIP_AUTH_INTERCEPTOR} from '../interceptors/auth.interceptor';
 import {voidOperator} from '@shared/utils/void-operator';
+import {NotifyService} from '../../notify/services/notify.service';
 
 type TokensDto = {
   accessToken: string,
@@ -26,6 +27,7 @@ export class AuthService {
   private readonly authApi = inject(AuthenticationControllerService);
   private readonly userApi = inject(UserControllerService);
   private readonly router = inject(Router);
+  private readonly notify = inject(NotifyService);
 
   private _tokensDto: TokensDto | undefined;
 
@@ -66,7 +68,8 @@ export class AuthService {
           this.setTokens(accessToken, refreshToken);
         }),
         switchMap(() => this.setCurrentUser$()),
-        tap(() => this._isLoadingUser.set(false))
+        finalize(() => this._isLoadingUser.set(false)),
+        this.notify.notifyHttpRequest('Successfully logged in')
       );
   }
 
@@ -118,7 +121,8 @@ export class AuthService {
         map(({accessToken}) => accessToken),
         tap((accessToken) => {
           this.setTokens(accessToken, refreshToken);
-        })
+        }),
+        this.notify.notifyHttpError()
       )
   }
 
