@@ -5,6 +5,7 @@ import {ZardDividerComponent} from '@shared/zardui/components/divider/divider.co
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {AuthService} from '../auth/services/auth.service';
+import {NotifyService} from '../notify/services/notify.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -21,8 +22,10 @@ import {AuthService} from '../auth/services/auth.service';
 })
 export class MainLayout {
   protected readonly auth = inject(AuthService);
+  private readonly notify = inject(NotifyService);
 
   protected onLogout() {
     this.auth.logout();
+    this.notify.showSuccessToast("Successfully logged out!");
   }
 }

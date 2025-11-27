@@ -9,6 +9,7 @@ import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit
 import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
+import {NotifyService} from '../../../../notify/services/notify.service';
 
 @Component({
   selector: 'app-login-page',
@@ -29,6 +30,7 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder).nonNullable;
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
+  private readonly notify = inject(NotifyService);
 
   protected readonly loginForm = this.fb.group<ControlsOf<LoginRequestDto>>({
     username: this.fb.control('', [Validators.required]),
@@ -41,7 +43,8 @@ export class LoginPage {
         switchMap(() => {
           const loginDto = this.loginForm.getRawValue();
           return this.auth.login$(loginDto);
-        })
+        }),
+        this.notify.notifyHttpRequest('Successfully logged in')
       )
       .subscribe(() => {
         this.router.navigate(['/']);

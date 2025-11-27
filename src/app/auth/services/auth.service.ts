@@ -69,7 +69,7 @@ export class AuthService {
         }),
         switchMap(() => this.setCurrentUser$()),
         finalize(() => this._isLoadingUser.set(false)),
-        this.notify.notifyHttpRequest('Successfully logged in')
+        this.notify.notifyHttpError()
       );
   }
 

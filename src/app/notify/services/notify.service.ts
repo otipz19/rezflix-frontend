@@ -41,7 +41,7 @@ export class NotifyService {
               this.showErrorToast("Authentication failed");
               this.router.navigate(['/', 'auth', 'login']);
             } else {
-              if(typeof error === 'string') {
+              if (typeof error === 'string') {
                 this.showErrorToast(error);
               } else if (error && error.message) {
                 this.showErrorToast(error.message);
@@ -63,7 +63,7 @@ export class NotifyService {
       return innerObservable
         .pipe(
           catchError(error => {
-            if(typeof error === 'string') {
+            if (typeof error === 'string') {
               this.showErrorToast(error);
             } else if (error && error.message) {
               this.showErrorToast(error.message);
@@ -77,10 +77,20 @@ export class NotifyService {
   }
 
   showErrorToast(message?: string) {
-    toast.error(message || 'Something went wrong...', {duration: 3000, position: 'bottom-right'});
+    toast.error(message || 'Something went wrong...', {
+      duration: 2000,
+      position: 'bottom-right',
+      dismissible: true,
+      action: {label: 'OK', onClick: () => {} },
+    });
   }
 
   showSuccessToast(message?: string) {
-    toast.success(message || 'Successfully saved changes!', {duration: 3000, position: 'bottom-right'});
+    toast.success(message || 'Successfully saved changes!', {
+      duration: 2000,
+      position: 'bottom-right',
+      dismissible: true,
+      action: {label: 'OK', onClick: () => {} },
+    });
   }
 }
