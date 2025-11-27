@@ -6,8 +6,10 @@
 
     <img src="/hero-banner.png" alt="Hero Banner" class="w-full max-w-lg h-auto object-contain mx-auto drop-shadow-md"/>
 
-    <h1 class="mx-auto max-w-4xl text-center text-5xl font-bold leading-tight tracking-[-1%] sm:text-[64px] sm:leading-[76px]">
-      Find Your Favorite <span class="bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent">Movie</span>
+    <h1
+      class="mx-auto max-w-4xl text-center text-5xl font-bold leading-tight tracking-[-1%] sm:text-[64px] sm:leading-[76px]">
+      Find Your Favorite <span
+      class="bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent">Movie</span>
     </h1>
 
     <app-search-bar class="w-full mt-10 max-w-3xl mx-auto" (queryChanged)="onQueryChanged($event)"/>
@@ -18,20 +20,35 @@
       All Movies
     </h2>
 
-    <div class="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      @for (film of films(); track film.id) {
-        <app-film-card [film]="film"/>
+    @if (!isLoading()) {
+      @if (films().length > 0) {
+        <div class="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          @for (film of films(); track film.id) {
+            <app-film-card [film]="film"/>
+          }
+        </div>
+      } @else {
+        <p class="text-4xl mx-auto w-fit my-16 text-center">No films where found</p>
       }
-    </div>
+    } @else {
+      <div class="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        @for (_ of skeletons; track $index) {
+          <app-film-card-skeleton/>
+        }
+      </div>
+    }
+
   </section>
 
   <div class="mt-12 w-full flex justify-center items-center">
-    <app-paginator
-      [pageIndex]="pageIndex()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalFilms()"
-      (paginationChanged)="onPageChanged($event)"
-    />
+    @if (films().length > 0) {
+      <app-paginator
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalFilms()"
+        (paginationChanged)="onPageChanged($event)"
+      />
+    }
   </div>
 </div>
 

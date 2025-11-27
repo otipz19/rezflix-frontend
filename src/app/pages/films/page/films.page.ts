@@ -8,13 +8,15 @@ import {SearchBarComponent} from './components/search-bar/search-bar.component';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 import {PaginatorComponent} from '@shared/components/paginator/paginator.component';
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
+import {FilmCardSkeletonComponent} from './components/film-card-skeleton/film-card-skeleton.component';
 
 @Component({
   selector: 'app-films-page',
   imports: [
     FilmCardComponent,
     SearchBarComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    FilmCardSkeletonComponent
   ],
   templateUrl: './films.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +33,8 @@ export class FilmsPage implements OnInit {
   protected readonly pageSize: Signal<number> = this.store.pageSize;
   protected readonly totalFilms: Signal<number> = this.store.total;
   protected readonly isLoading: Signal<boolean> = this.store.isLoading;
+
+  protected readonly skeletons = Array.from({length: 8});
 
   constructor() {
     this.searchQueryChange$
