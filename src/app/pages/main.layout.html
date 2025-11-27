@@ -5,6 +5,26 @@
     <img src="/logo.png" alt="Logo" class="h-6 w-auto"/>
     <span class="text-3xl tracking-widest">REZFLIX</span>
   </div>
+
+  <div>
+    <button z-button zType="outline" z-dropdown [zDropdownMenu]="menu" zTrigger="click" zDirection="left">
+      <z-icon zType="user"></z-icon>
+    </button>
+
+    <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+      <z-dropdown-menu-label>Account</z-dropdown-menu-label>
+
+      <z-dropdown-menu-item>
+        Profile
+      </z-dropdown-menu-item>
+
+      <z-divider zSpacing="sm" class="-mx-1" />
+
+      <z-dropdown-menu-item>
+        Log out
+      </z-dropdown-menu-item>
+    </z-dropdown-menu-content>
+  </div>
 </nav>
 
 <div class="w-full max-w-7xl mx-auto p-4 pb-12 z-10 relative">
