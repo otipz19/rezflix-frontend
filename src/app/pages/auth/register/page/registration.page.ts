@@ -8,12 +8,11 @@ import {ZardButtonComponent} from '@shared/zardui/components/button/button.compo
 import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Component, inject} from '@angular/core';
-import {AuthService} from '../../../../auth/services/auth.service';
-import {ControlsOf} from '@shared/forms/utils/controls-of';
-import {LoginRequestDto} from '../../../../api';
 import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';
 import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
+import {passwordsEqualValidator} from '@shared/forms/validators/passwords-equal.validator';
+import {RegistrationService} from '../../../../auth/services/registration.service';
 
 @Component({
   selector: 'app-login-page',
@@ -28,27 +27,31 @@ import {Router, RouterLink} from '@angular/router';
     ZardFormControlComponent,
     RouterLink,
   ],
-  templateUrl: './login.page.html',
+  templateUrl: './registration.page.html',
   host: {
     class: 'w-full max-w-md space-y-6 sm:space-y-8'
   }
 })
-export class LoginPage {
+export class RegistrationPage {
   private readonly fb = inject(FormBuilder).nonNullable;
   private readonly router = inject(Router);
-  protected readonly auth = inject(AuthService);
+  protected readonly registrationService = inject(RegistrationService);
 
-  protected readonly loginForm = this.fb.group<ControlsOf<LoginRequestDto>>({
+  protected readonly form = this.fb.group({
+    // TODO: check backend for length validation of username and password
     username: this.fb.control('', [Validators.required]),
     password: this.fb.control('', [Validators.required]),
+    passwordConfirm: this.fb.control("", [Validators.required]),
+  }, {
+    validators: [passwordsEqualValidator()]
   });
 
   protected onSubmit() {
-    checkValidFormSubmit$(this.loginForm)
+    checkValidFormSubmit$(this.form)
       .pipe(
         switchMap(() => {
-          const loginDto = this.loginForm.getRawValue();
-          return this.auth.login$(loginDto);
+          const {username, password} = this.form.getRawValue();
+          return this.registrationService.register$({username, password});
         })
       )
       .subscribe(() => {

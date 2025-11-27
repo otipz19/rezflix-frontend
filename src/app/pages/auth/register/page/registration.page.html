@@ -1,0 +1,44 @@
+<div class="text-center">
+  <h1 class="text-2xl font-bold sm:text-3xl">Welcome, new user!</h1>
+  <p class="mt-2 text-sm text-muted-foreground sm:text-base">Create new account to continue</p>
+</div>
+
+<z-card class="p-4 sm:p-6 lg:p-8">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
+    <z-form-field>
+      <z-form-label [zRequired]="true">Username</z-form-label>
+      <z-form-control>
+        <input z-input type="text" [formControl]="form.controls.username" placeholder="haskell" class="w-full"/>
+      </z-form-control>
+    </z-form-field>
+
+    <z-form-field>
+      <div class="flex items-center justify-between">
+        <z-form-label [zRequired]="true">Password</z-form-label>
+      </div>
+      <z-form-control>
+        <input z-input type="password" [formControl]="form.controls.password" placeholder="••••••••"
+               class="w-full"/>
+      </z-form-control>
+    </z-form-field>
+
+    <z-form-field>
+      <div class="flex items-center justify-between">
+        <z-form-label [zRequired]="true">Confirm password</z-form-label>
+      </div>
+      <z-form-control>
+        <input z-input type="password" [formControl]="form.controls.passwordConfirm" placeholder="••••••••"
+               class="w-full"/>
+      </z-form-control>
+    </z-form-field>
+
+    <button type="submit" z-button zFull [zLoading]="registrationService.isLoading()" [disabled]="registrationService.isLoading()">
+      Register
+    </button>
+  </form>
+</z-card>
+
+<p class="text-center text-sm text-muted-foreground">
+  Already have an account?
+  <a z-button zType="link" href="#" class="px-0" [routerLink]="['/', 'auth', 'login']">Log in</a>
+</p>
