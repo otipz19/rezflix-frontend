@@ -1,0 +1,21 @@
+<z-pagination-content ariaLabel="Page navigation">
+  <z-pagination-item>
+    <z-pagination-previous (click)="goToPrevious()"/>
+  </z-pagination-item>
+
+  @for (page of pages(); track page) {
+    <z-pagination-item>
+      @if (page != 'ellipsis') {
+        <z-pagination-button [zActive]="page === pageIndex()" (click)="goToPage(page)">
+          {{ page + 1 }}
+        </z-pagination-button>
+      } @else {
+        <z-pagination-ellipsis/>
+      }
+    </z-pagination-item>
+  }
+
+  <z-pagination-item>
+    <z-pagination-next (click)="goToNext()"/>
+  </z-pagination-item>
+</z-pagination-content>
