@@ -1,11 +1,5 @@
-import {
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-  ZardFormControlComponent
-} from '@shared/zardui/components/form/form.component';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
-import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Component, inject} from '@angular/core';
 import {AuthService} from '../../../../auth/services/auth.service';
@@ -14,6 +8,7 @@ import {LoginRequestDto} from '../../../../api';
 import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';
 import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
+import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
 
 @Component({
   selector: 'app-login-page',
@@ -22,11 +17,8 @@ import {Router, RouterLink} from '@angular/router';
     ReactiveFormsModule,
     ZardButtonComponent,
     ZardCardComponent,
-    ZardInputDirective,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
     RouterLink,
+    FormInputComponent,
   ],
   templateUrl: './login.page.html',
   host: {

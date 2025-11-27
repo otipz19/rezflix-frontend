@@ -5,24 +5,20 @@
 
 <z-card class="p-4 sm:p-6 lg:p-8">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
-    <z-form-field>
-      <z-form-label [zRequired]="true">Username</z-form-label>
-      <z-form-control>
-        <input z-input type="text" [formControl]="loginForm.controls.username" placeholder="haskell" class="w-full"/>
-      </z-form-control>
-    </z-form-field>
+    <app-form-input [control]="loginForm.controls.username"
+                    label="Username"
+                    type="text"
+                    placeholder="haskell"
+    />
 
-    <z-form-field>
-      <div class="flex items-center justify-between">
-        <z-form-label [zRequired]="true">Password</z-form-label>
-      </div>
-      <z-form-control>
-        <input z-input type="password" [formControl]="loginForm.controls.password" placeholder="••••••••"
-               class="w-full"/>
-      </z-form-control>
-    </z-form-field>
+    <app-form-input [control]="loginForm.controls.password"
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+    />
 
-    <button type="submit" z-button zFull [zLoading]="auth.isLoadingUser()" [disabled]="auth.isLoadingUser()">Log in
+    <button type="submit" z-button zFull [zLoading]="auth.isLoadingUser()" [disabled]="auth.isLoadingUser()">
+      Log in
     </button>
   </form>
 </z-card>

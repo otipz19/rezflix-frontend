@@ -1,11 +1,5 @@
-import {
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-  ZardFormControlComponent
-} from '@shared/zardui/components/form/form.component';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
-import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Component, inject} from '@angular/core';
 import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';
@@ -13,6 +7,7 @@ import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
 import {passwordsEqualValidator} from '@shared/forms/validators/passwords-equal.validator';
 import {RegistrationService} from '../../../../auth/services/registration.service';
+import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
 
 @Component({
   selector: 'app-login-page',
@@ -21,11 +16,8 @@ import {RegistrationService} from '../../../../auth/services/registration.servic
     ReactiveFormsModule,
     ZardButtonComponent,
     ZardCardComponent,
-    ZardInputDirective,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
     RouterLink,
+    FormInputComponent,
   ],
   templateUrl: './registration.page.html',
   host: {
