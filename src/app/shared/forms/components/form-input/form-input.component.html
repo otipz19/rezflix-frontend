@@ -1,0 +1,19 @@
+@let ctrl = control();
+@let status = ctrl.dirty ? (ctrl.valid ? 'success' : 'error') : undefined;
+
+<z-form-field class="w-full">
+  <z-form-label [zRequired]="isRequired()">
+    {{ label() }}
+  </z-form-label>
+
+  <z-form-control>
+    <input name="input" z-input [type]="type()" [zStatus]="status"
+           [formControl]="ctrl" [placeholder]="placeholder()"
+           class="w-full"
+    />
+  </z-form-control>
+
+  @if (status === 'error') {
+    <z-form-message zType="error">{{ ctrl.errors | errorMessage }}</z-form-message>
+  }
+</z-form-field>
