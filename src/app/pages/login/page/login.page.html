@@ -1,0 +1,47 @@
+<div class="flex flex-col lg:flex-row">
+  <div class="flex flex-1 items-center justify-center bg-background rounded-l-lg p-4 sm:p-8">
+    <div class="w-full max-w-md space-y-6 sm:space-y-8">
+      <div class="text-center">
+        <h1 class="text-2xl font-bold sm:text-3xl">Welcome back</h1>
+        <p class="mt-2 text-sm text-muted-foreground sm:text-base">Log in to your account to continue</p>
+      </div>
+
+      <z-card class="p-4 sm:p-6 lg:p-8">
+        <form [formGroup]="loginForm" class="space-y-4 sm:space-y-6">
+          <z-form-field>
+            <z-form-label [zRequired]="true">Username</z-form-label>
+            <z-form-control>
+              <input z-input type="text" formControlName="username" placeholder="haskell" class="w-full" />
+            </z-form-control>
+          </z-form-field>
+
+          <z-form-field>
+            <div class="flex items-center justify-between">
+              <z-form-label [zRequired]="true">Password</z-form-label>
+            </div>
+            <z-form-control>
+              <input z-input type="password" formControlName="password" placeholder="••••••••" class="w-full" />
+            </z-form-control>
+          </z-form-field>
+
+          <button type="submit" z-button zFull [zLoading]="isLoading()" [disabled]="isLoading()">Log in</button>
+        </form>
+      </z-card>
+
+      <p class="text-center text-sm text-muted-foreground">
+        Don't have an account?
+        <a z-button zType="link" href="#" class="px-0">Register</a>
+      </p>
+    </div>
+  </div>
+
+  <aside class="hidden flex-1 items-center justify-center bg-card p-8 rounded-r-lg lg:flex">
+    <div class="max-w-lg text-center">
+      <h2 class="mb-4 text-3xl font-bold">Join Rezflix Today!</h2>
+      <p class="mb-6 text-lg text-muted-foreground">
+        Experience the ultimate movie streaming platform. Sign up now to explore a vast library of films, create personalized watchlists, and enjoy seamless streaming on any device
+      </p>
+      <img src="/hero-banner.png" alt="Join Rezflix" class="mx-auto w-3/4"/>
+    </div>
+  </aside>
+</div>

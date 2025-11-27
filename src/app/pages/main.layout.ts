@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import {RouterLink, RouterOutlet} from '@angular/router';
 import {ZardDropdownModule} from '@shared/zardui/components/dropdown/dropdown.module';
 import {ZardDividerComponent} from '@shared/zardui/components/divider/divider.component';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
@@ -15,7 +15,8 @@ import {AuthService} from '../auth/services/auth.service';
     ZardDropdownModule,
     ZardDividerComponent,
     ZardButtonComponent,
-    ZardIconComponent
+    ZardIconComponent,
+    RouterLink
   ]
 })
 export class MainLayout {

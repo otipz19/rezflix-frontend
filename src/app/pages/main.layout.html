@@ -1,7 +1,7 @@
 <div class="bg-hero-pattern w-full h-screen bg-center bg-cover absolute z-0"></div>
 
 <nav class="sticky bg-black/65 w-full h-16 top-0 left-0 z-20 flex justify-between items-center px-4 md:px-8">
-  <div class="flex flex-row justify-between items-center gap-4">
+  <div class="flex flex-row justify-between items-center gap-4" [routerLink]="['/']">
     <img src="/logo.png" alt="Logo" class="h-6 w-auto"/>
     <span class="text-3xl tracking-widest">REZFLIX</span>
   </div>
@@ -24,7 +24,9 @@
           Log Out
         </z-dropdown-menu-item>
       } @else {
-        <z-dropdown-menu-item>
+        <z-dropdown-menu-label>Welcome, new user!</z-dropdown-menu-label>
+
+        <z-dropdown-menu-item [routerLink]="['/login']">
           Log In
         </z-dropdown-menu-item>
       }

@@ -14,6 +14,10 @@ export const routes: Routes = [
       {
         path: 'films',
         loadChildren: () => import('./pages/films/routes').then(r => r.FILMS_ROUTES)
+      },
+      {
+        path: 'login',
+        loadChildren: () => import('./pages/login/routes').then(r => r.LOGIN_ROUTES)
       }
     ]
   }
