@@ -1,13 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, input, output, Signal} from '@angular/core';
-
 import {ZardPaginationModule} from '@shared/zardui/components/pagination/pagination.module';
 import {ZardPaginationContentComponent} from '@shared/zardui/components/pagination/pagination.component';
 import {range} from '@shared/utils/range';
-
-export type PaginationChangedEvent = {
-  pageIndex: number;
-  pageSize: number;
-}
+import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
 
 @Component({
   selector: 'app-paginator',
@@ -40,13 +35,13 @@ export class PaginatorComponent {
   });
 
   protected goToPrevious() {
-    if (this.pageIndex() > 1) {
+    if (this.pageIndex() > 0) {
       this.goToPage(this.pageIndex() - 1);
     }
   }
 
   protected goToNext() {
-    if (this.pageIndex() < this.totalPages()) {
+    if (this.pageIndex() < this.totalPages() - 1) {
       this.goToPage(this.pageIndex() + 1);
     }
   }

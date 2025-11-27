@@ -24,5 +24,14 @@
       }
     </div>
   </section>
+
+  <div>
+    <app-paginator
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalFilms()"
+      (paginationChanged)="onPageChanged($event)"
+    />
+  </div>
 </div>
 
