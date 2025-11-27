@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import {MainLayout} from './pages/main.layout';
+import {unauthenticatedRouteGuard} from './auth/route-guards/unauthenticated.route-guard';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
       },
       {
         path: 'login',
+        canActivate: [unauthenticatedRouteGuard],
         loadChildren: () => import('./pages/login/routes').then(r => r.LOGIN_ROUTES)
       }
     ]
