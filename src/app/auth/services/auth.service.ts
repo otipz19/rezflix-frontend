@@ -32,6 +32,17 @@ export class AuthService {
   });
   readonly role = computed(() => this.currentUser()?.role);
 
+  readonly username = computed(() => {
+    const user = this.currentUser();
+    if(!user) {
+      return 'ANONYMOUS';
+    }
+    if(user.role === UserRoleDto.SUPER_ADMIN) {
+      return 'SUPER_ADMIN';
+    }
+    return user.info?.username ?? 'NONAME';
+  });
+
   hasRole(...roles: UserRoleDto[]): boolean {
     const role = this.role();
     return Boolean(role && roles.includes(role));
