@@ -8,6 +8,8 @@ import {Router, RouterLink} from '@angular/router';
 import {passwordsEqualValidator} from '@shared/forms/validators/passwords-equal.validator';
 import {RegistrationService} from '../../../../auth/services/registration.service';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
+import {ErrorMessagePipe} from '@shared/forms/pipes/error-message.pipe';
+import {ZardFormMessageComponent} from '@shared/zardui/components/form/form.component';
 
 @Component({
   selector: 'app-login-page',
@@ -18,6 +20,8 @@ import {FormInputComponent} from '@shared/forms/components/form-input/form-input
     ZardCardComponent,
     RouterLink,
     FormInputComponent,
+    ErrorMessagePipe,
+    ZardFormMessageComponent,
   ],
   templateUrl: './registration.page.html',
   host: {

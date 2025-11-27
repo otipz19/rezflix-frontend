@@ -4,28 +4,39 @@
 </div>
 
 <z-card class="p-4 sm:p-6 lg:p-8">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
-    <app-form-input [control]="form.controls.username"
-                    label="Username"
-                    type="text"
-                    placeholder="haskell"
-    />
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="space-y-4 sm:space-y-6">
+      <app-form-input [control]="form.controls.username"
+                      label="Username"
+                      type="text"
+                      placeholder="haskell"
+      />
 
-    <app-form-input [control]="form.controls.password"
-                    label="Password"
-                    type="password"
-                    placeholder="••••••••"
-    />
+      <app-form-input [control]="form.controls.password"
+                      label="Password"
+                      type="password"
+                      placeholder="••••••••"
+      />
 
-    <app-form-input [control]="form.controls.passwordConfirm"
-                    label="Confirm password"
-                    type="password"
-                    placeholder="••••••••"
-    />
+      <app-form-input [control]="form.controls.passwordConfirm"
+                      label="Confirm password"
+                      type="password"
+                      placeholder="••••••••"
+      />
+    </div>
 
-    <button type="submit" z-button zFull [zLoading]="registrationService.isLoading()" [disabled]="registrationService.isLoading()">
-      Register
-    </button>
+    <div class="mt-6">
+      @if (form.errors) {
+        <div class="mb-3">
+          <z-form-message zType="error">{{ form.errors | errorMessage }}</z-form-message>
+        </div>
+      }
+
+      <button type="submit" z-button zFull [zLoading]="registrationService.isLoading()"
+              [disabled]="registrationService.isLoading()">
+        Register
+      </button>
+    </div>
   </form>
 </z-card>
 
