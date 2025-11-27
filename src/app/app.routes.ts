@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import {MainLayout} from './pages/main.layout';
 
 export const routes: Routes = [
   {
@@ -7,7 +8,13 @@ export const routes: Routes = [
     redirectTo: 'films'
   },
   {
-    path: 'films',
-    loadChildren: () => import('./pages/films/routes').then(r => r.FILMS_ROUTES)
+    path: '',
+    component: MainLayout,
+    children: [
+      {
+        path: 'films',
+        loadChildren: () => import('./pages/films/routes').then(r => r.FILMS_ROUTES)
+      }
+    ]
   }
 ];
