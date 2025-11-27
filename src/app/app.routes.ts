@@ -17,9 +17,9 @@ export const routes: Routes = [
         loadChildren: () => import('./pages/films/routes').then(r => r.FILMS_ROUTES)
       },
       {
-        path: 'login',
+        path: 'auth',
         canActivate: [unauthenticatedRouteGuard],
-        loadChildren: () => import('./pages/login/routes').then(r => r.LOGIN_ROUTES)
+        loadChildren: () => import('./pages/auth/routes').then(r => r.AUTH_ROUTES)
       }
     ]
   }

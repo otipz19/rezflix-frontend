@@ -9,5 +9,5 @@ export const authenticatedRouteGuard: CanActivateFn = () => {
     return true;
   }
   const router = inject(Router);
-  return router.navigate(['/', 'login']);
+  return router.navigate(['/', 'auth', 'login']);
 };

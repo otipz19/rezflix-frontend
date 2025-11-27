@@ -39,7 +39,7 @@ export class NotifyService {
           catchError(error => {
             if (error && error instanceof HttpErrorResponse && error.status === 401) {
               this.showErrorToast("Authentication failed");
-              this.router.navigate(['/', 'login']);
+              this.router.navigate(['/', 'auth', 'login']);
             } else {
               if(typeof error === 'string') {
                 this.showErrorToast(error);

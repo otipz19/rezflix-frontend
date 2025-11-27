@@ -8,12 +8,12 @@ import {ZardButtonComponent} from '@shared/zardui/components/button/button.compo
 import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Component, inject} from '@angular/core';
-import {AuthService} from '../../../auth/services/auth.service';
+import {AuthService} from '../../../../auth/services/auth.service';
 import {ControlsOf} from '@shared/utils/forms/controls-of';
-import {LoginRequestDto} from '../../../api';
+import {LoginRequestDto} from '../../../../api';
 import {checkValidFormSubmit$} from '@shared/utils/forms/check-valid-form-submit';
 import {switchMap} from 'rxjs';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -26,8 +26,12 @@ import {Router} from '@angular/router';
     ZardFormFieldComponent,
     ZardFormLabelComponent,
     ZardFormControlComponent,
+    RouterLink,
   ],
   templateUrl: './login.page.html',
+  host: {
+    class: 'w-full max-w-md space-y-6 sm:space-y-8'
+  }
 })
 export class LoginPage {
   private readonly fb = inject(FormBuilder).nonNullable;
