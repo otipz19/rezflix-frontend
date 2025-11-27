@@ -21,4 +21,8 @@ import {AuthService} from '../auth/services/auth.service';
 })
 export class MainLayout {
   protected readonly auth = inject(AuthService);
+
+  protected onLogout() {
+    this.auth.logout();
+  }
 }
