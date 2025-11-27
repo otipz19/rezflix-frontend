@@ -24,6 +24,8 @@ export class ZardDropdownDirective implements OnInit {
   readonly zTrigger = input<'click' | 'hover'>('click');
   readonly zDisabled = input<boolean>(false);
 
+  readonly zDirection = input<'left' | 'right'>('right');
+
   ngOnInit() {
     // Ensure button has proper accessibility attributes
     const element = this.elementRef.nativeElement;
@@ -42,7 +44,7 @@ export class ZardDropdownDirective implements OnInit {
 
     const menuContent = this.zDropdownMenu();
     if (menuContent) {
-      this.dropdownService.toggle(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef);
+      this.dropdownService.toggle(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef, this.zDirection());
     }
   }
 
@@ -52,7 +54,7 @@ export class ZardDropdownDirective implements OnInit {
 
     const menuContent = this.zDropdownMenu();
     if (menuContent) {
-      this.dropdownService.open(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef);
+      this.dropdownService.open(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef, this.zDirection());
     }
   }
 
@@ -89,14 +91,14 @@ export class ZardDropdownDirective implements OnInit {
   private toggleDropdown() {
     const menuContent = this.zDropdownMenu();
     if (menuContent) {
-      this.dropdownService.toggle(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef);
+      this.dropdownService.toggle(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef, this.zDirection());
     }
   }
 
   private openDropdown() {
     const menuContent = this.zDropdownMenu();
     if (menuContent && !this.dropdownService.isOpen()) {
-      this.dropdownService.open(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef);
+      this.dropdownService.open(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef, this.zDirection());
     }
   }
 }

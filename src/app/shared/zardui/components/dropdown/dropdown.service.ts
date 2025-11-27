@@ -20,21 +20,21 @@ export class ZardDropdownService {
 
   readonly isOpen = signal(false);
 
-  toggle(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef) {
+  toggle(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef, direction: 'left' | 'right' = 'right') {
     if (this.isOpen()) {
       this.close();
     } else {
-      this.open(triggerElement, template, viewContainerRef);
+      this.open(triggerElement, template, viewContainerRef, direction);
     }
   }
 
-  open(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef) {
+  open(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef, direction: 'left' | 'right' = 'right') {
     if (this.isOpen()) {
       this.close();
     }
 
     this.triggerElement = triggerElement;
-    this.createOverlay(triggerElement);
+    this.createOverlay(triggerElement, direction);
 
     if (!this.overlayRef) return;
 
@@ -63,29 +63,51 @@ export class ZardDropdownService {
     this.destroyOverlay();
   }
 
-  private createOverlay(triggerElement: ElementRef) {
+  private createOverlay(triggerElement: ElementRef, direction: 'left' | 'right' = 'right') {
     if (this.overlayRef) {
       this.destroyOverlay();
     }
 
+    // build left/right position sets
+    const rightPositions = [
+      {
+        originX: 'start' as const,
+        originY: 'bottom' as const,
+        overlayX: 'start' as const,
+        overlayY: 'top' as const,
+        offsetY: 4,
+      },
+      {
+        originX: 'start' as const,
+        originY: 'top' as const,
+        overlayX: 'start' as const,
+        overlayY: 'bottom' as const,
+        offsetY: -4,
+      },
+    ];
+
+    const leftPositions = [
+      {
+        originX: 'end' as const,
+        originY: 'bottom' as const,
+        overlayX: 'end' as const,
+        overlayY: 'top' as const,
+        offsetY: 4,
+      },
+      {
+        originX: 'end' as const,
+        originY: 'top' as const,
+        overlayX: 'end' as const,
+        overlayY: 'bottom' as const,
+        offsetY: -4,
+      },
+    ];
+
+    let positions = direction === 'left' ? leftPositions : rightPositions;
+
     const positionStrategy = this.overlayPositionBuilder
       .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ])
+      .withPositions(positions)
       .withPush(false);
 
     this.overlayRef = this.overlay.create({

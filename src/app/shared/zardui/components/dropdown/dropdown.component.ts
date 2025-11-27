@@ -63,6 +63,9 @@ export class ZardDropdownMenuComponent implements OnInit, OnDestroy {
   readonly class = input<ClassValue>('');
   readonly disabled = input(false, { transform });
 
+  // New input: horizontal direction for this component's overlay
+  readonly direction = input<'left' | 'right'>('right');
+
   readonly openChange = output<boolean>();
 
   readonly isOpen = signal(false);
@@ -163,24 +166,46 @@ export class ZardDropdownMenuComponent implements OnInit, OnDestroy {
 
     if (isPlatformBrowser(this.platformId)) {
       try {
+        // build left/right position sets
+        const rightPositions = [
+          {
+            originX: 'start' as const,
+            originY: 'bottom' as const,
+            overlayX: 'start' as const,
+            overlayY: 'top' as const,
+            offsetY: 4,
+          },
+          {
+            originX: 'start' as const,
+            originY: 'top' as const,
+            overlayX: 'start' as const,
+            overlayY: 'bottom' as const,
+            offsetY: -4,
+          },
+        ];
+
+        const leftPositions = [
+          {
+            originX: 'end' as const,
+            originY: 'bottom' as const,
+            overlayX: 'end' as const,
+            overlayY: 'top' as const,
+            offsetY: 4,
+          },
+          {
+            originX: 'end' as const,
+            originY: 'top' as const,
+            overlayX: 'end' as const,
+            overlayY: 'bottom' as const,
+            offsetY: -4,
+          },
+        ];
+
+        let positions = this.direction() === 'left' ? leftPositions : rightPositions;
+
         const positionStrategy = this.overlayPositionBuilder
           .flexibleConnectedTo(this.elementRef)
-          .withPositions([
-            {
-              originX: 'start',
-              originY: 'bottom',
-              overlayX: 'start',
-              overlayY: 'top',
-              offsetY: 4,
-            },
-            {
-              originX: 'start',
-              originY: 'top',
-              overlayX: 'start',
-              overlayY: 'bottom',
-              offsetY: -4,
-            },
-          ])
+          .withPositions(positions)
           .withPush(false);
 
         this.overlayRef = this.overlay.create({
