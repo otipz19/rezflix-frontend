@@ -4,11 +4,13 @@ import {injectDispatch} from '@ngrx/signals/events';
 import {filmsPageEvents} from './state/events';
 import {FilmDto} from '../../../api';
 import {FilmCard} from './components/film-card/film-card';
+import {SearchBar} from './components/search-bar/search-bar';
 
 @Component({
   selector: 'app-films-page',
   imports: [
-    FilmCard
+    FilmCard,
+    SearchBar
   ],
   templateUrl: './films-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
