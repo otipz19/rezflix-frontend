@@ -1,0 +1,13 @@
+<form [formGroup]="form" class="space-y-4 sm:space-y-6">
+  <app-form-input [control]="form.controls.title"
+                  label="Title"
+                  type="text"
+                  placeholder="Pulp Fiction..."
+  />
+
+  <app-form-input [control]="form.controls.description"
+                  label="Description"
+                  type="textarea"
+                  placeholder="The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption..."
+  />
+</form>

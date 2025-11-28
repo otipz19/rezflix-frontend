@@ -1,0 +1,34 @@
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {DialogService} from '../../../../../core/dialog/services/dialog.service';
+import {EditFilmInfoFormComponent} from '../components/edit-film-info-form/edit-film-info-form.component';
+import {FilmControllerService, FilmDto, UpsertFilmDto} from '../../../../../api';
+import {NotifyService} from '../../../../../core/notify/services/notify.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EditFilmInfoService {
+  private readonly dialogService = inject(DialogService);
+  private readonly api = inject(FilmControllerService);
+  private readonly notify = inject(NotifyService);
+
+  edit$(id: FilmDto['id'], initialDto: UpsertFilmDto): Observable<void> {
+    return this.dialogService.upsert(
+      {
+        zTitle: 'Edit Movie Info',
+        zDescription: `Make changes to your movie info here. Click save when you're done.`,
+        zContent: EditFilmInfoFormComponent,
+        zData: initialDto,
+        zOkText: 'Save changes',
+        zWidth: '425px',
+      },
+      (updatedFilm: UpsertFilmDto) => {
+        return this.api.updateFilm(id, updatedFilm)
+          .pipe(
+            this.notify.notifyHttpRequest('Movie info updated successfully!')
+          );
+      }
+    );
+  }
+}
