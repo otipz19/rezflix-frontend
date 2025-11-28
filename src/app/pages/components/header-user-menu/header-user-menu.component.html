@@ -1,0 +1,24 @@
+<button z-button zType="outline" z-dropdown [zDropdownMenu]="menu" zTrigger="click" zDirection="left">
+  <z-icon zType="user"></z-icon>
+</button>
+<z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+  @if (auth.isAuthenticated()) {
+    <z-dropdown-menu-label>Welcome, {{auth.username()}}!</z-dropdown-menu-label>
+
+    <z-dropdown-menu-item>
+      Profile
+    </z-dropdown-menu-item>
+
+    <z-divider zSpacing="sm" class="-mx-1"/>
+
+    <z-dropdown-menu-item (click)="onLogout()">
+      Log Out
+    </z-dropdown-menu-item>
+  } @else {
+    <z-dropdown-menu-label>Welcome, new user!</z-dropdown-menu-label>
+
+    <z-dropdown-menu-item [routerLink]="['auth', 'login']">
+      Log In
+    </z-dropdown-menu-item>
+  }
+</z-dropdown-menu-content>
