@@ -10,11 +10,11 @@ import {IUpsertDialogComponent} from '../abstract/upsert-dialog-component.interf
 export class DialogService {
   private readonly zardDialogService = inject(ZardDialogService);
 
-  create<TData extends object, TComponent extends IUpsertDialogComponent<TData>>(
+  upsert<TData extends object, TComponent extends IUpsertDialogComponent<TData>>(
     config: Omit<ZardDialogOptions<TComponent, TData>, 'zOnOk' | 'zOnCancel'>,
-    submit$: (value: TData) => Observable<TData>
-  ): Observable<TData> {
-    return new Observable<TData>(subscriber => {
+    submit$: (value: TData) => Observable<void>
+  ): Observable<void> {
+    return new Observable<void>(subscriber => {
       const submitEvent = new EventEmitter<TComponent>();
 
       const dialogRef = this.zardDialogService.create<TComponent, TData>({
@@ -36,8 +36,8 @@ export class DialogService {
             // Silent error handling to keep the dialog open on error
             catchError(() => EMPTY)
           )
-          .subscribe(result => {
-            subscriber.next(result);
+          .subscribe(() => {
+            subscriber.next();
             subscriber.complete();
           });
       })
