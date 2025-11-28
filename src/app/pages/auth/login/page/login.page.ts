@@ -2,14 +2,14 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Component, inject} from '@angular/core';
-import {AuthService} from '../../../../auth/services/auth.service';
+import {AuthService} from '../../../../core/auth/services/auth.service';
 import {ControlsOf} from '@shared/forms/utils/controls-of';
 import {LoginRequestDto} from '../../../../api';
 import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';
 import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
-import {NotifyService} from '../../../../notify/services/notify.service';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 
 @Component({
   selector: 'app-login-page',

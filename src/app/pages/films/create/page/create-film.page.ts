@@ -4,7 +4,7 @@ import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angula
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardCardComponent} from '@shared/zardui/components/card/card.component';
 import {Router} from '@angular/router';
-import {NotifyService} from '../../../../notify/services/notify.service';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 import {ControlsOf} from '@shared/forms/utils/controls-of';
 import {FilmControllerService, UpsertFilmDto} from '../../../../api';
 import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';

@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
 import {FilmsPage} from './page/films.page';
-import {hasRoleRouteGuard} from '../../auth/route-guards/has-role-route.guard';
+import {hasRoleRouteGuard} from '../../core/auth/route-guards/has-role-route.guard';
 import {UserRoleDto} from '../../api';
 
 export const FILMS_ROUTES: Routes = [

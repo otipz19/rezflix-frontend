@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import {MainLayout} from './pages/main.layout';
-import {unauthenticatedRouteGuard} from './auth/route-guards/unauthenticated.route-guard';
+import {unauthenticatedRouteGuard} from './core/auth/route-guards/unauthenticated.route-guard';
 
 export const routes: Routes = [
   {

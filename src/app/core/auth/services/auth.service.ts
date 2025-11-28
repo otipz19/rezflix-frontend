@@ -8,7 +8,7 @@ import {
   LoginRequestDto,
   UserControllerService,
   UserRoleDto
-} from '../../api';
+} from '../../../api';
 import {SKIP_AUTH_INTERCEPTOR} from '../interceptors/auth.interceptor';
 import {voidOperator} from '@shared/utils/void-operator';
 import {NotifyService} from '../../notify/services/notify.service';

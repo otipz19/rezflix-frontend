@@ -1,6 +1,6 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {finalize, Observable, switchMap} from 'rxjs';
-import {RegisterUserDto, UserControllerService} from '../../api';
+import {RegisterUserDto, UserControllerService} from '../../../api';
 import {AuthService} from './auth.service';
 import {NotifyService} from '../../notify/services/notify.service';
 import {voidOperator} from '@shared/utils/void-operator';

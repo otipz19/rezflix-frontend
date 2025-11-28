@@ -6,7 +6,7 @@ import {checkValidFormSubmit$} from '@shared/forms/utils/check-valid-form-submit
 import {switchMap} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
 import {passwordsEqualValidator} from '@shared/forms/validators/passwords-equal.validator';
-import {RegistrationService} from '../../../../auth/services/registration.service';
+import {RegistrationService} from '../../../../core/auth/services/registration.service';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
 import {ErrorMessagePipe} from '@shared/forms/pipes/error-message.pipe';
 import {ZardFormMessageComponent} from '@shared/zardui/components/form/form.component';

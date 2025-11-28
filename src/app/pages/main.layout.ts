@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
-import {AuthService} from '../auth/services/auth.service';
+import {AuthService} from '../core/auth/services/auth.service';
 import {HeaderUserMenuComponent} from './components/header-user-menu/header-user-menu.component';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {UserRoleDto} from '../api';

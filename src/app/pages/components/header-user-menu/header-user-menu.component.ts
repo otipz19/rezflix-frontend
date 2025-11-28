@@ -3,8 +3,8 @@ import {ZardDropdownModule} from '@shared/zardui/components/dropdown/dropdown.mo
 import {ZardDividerComponent} from '@shared/zardui/components/divider/divider.component';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
-import {AuthService} from '../../../auth/services/auth.service';
-import {NotifyService} from '../../../notify/services/notify.service';
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {NotifyService} from '../../../core/notify/services/notify.service';
 import {RouterLink} from '@angular/router';
 
 @Component({

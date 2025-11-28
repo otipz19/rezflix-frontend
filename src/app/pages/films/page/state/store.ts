@@ -5,7 +5,7 @@ import {inject} from '@angular/core';
 import {filmsPageEvents} from './events';
 import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
-import {NotifyService} from '../../../../notify/services/notify.service';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 
 type FilmsPageState = {
   films: Array<FilmDto>,
