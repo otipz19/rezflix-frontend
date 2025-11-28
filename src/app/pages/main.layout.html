@@ -8,7 +8,7 @@
 
   <div class="flex flex-row justify-between items-center gap-4 md:gap-6">
     @if (auth.hasRole(UserRoleDto.CONTENT_MANAGER)) {
-      <a z-button zType="default" class="flex flex-row justify-between items-center gap-2">
+      <a [routerLink]="['/', 'films', 'create']" z-button zType="default" class="flex flex-row justify-between items-center gap-2">
         <z-icon zType="plus" zSize="xl"></z-icon>
         <span class="hidden sm:block">Upload new movie</span>
       </a>
