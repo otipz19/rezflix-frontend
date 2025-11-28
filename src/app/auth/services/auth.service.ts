@@ -79,14 +79,15 @@ export class AuthService {
       return EMPTY;
     }
 
+    this._tokensDto = JSON.parse(fromLs);
     this._isLoadingUser.set(true);
 
-    this._tokensDto = JSON.parse(fromLs);
     return this.setCurrentUser$()
       .pipe(
         catchError(error => {
           // If token expired and so restoration failed
           if (error instanceof HttpErrorResponse && error.status === 401) {
+            this.closeSession();
             return EMPTY;
           }
           return throwError(() => error);
