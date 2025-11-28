@@ -7,10 +7,17 @@
   </z-form-label>
 
   <z-form-control>
-    <input name="input" z-input [type]="type()" [zStatus]="status"
-           [formControl]="ctrl" [placeholder]="placeholder()"
-           class="w-full"
-    />
+    @if (type() === 'textarea') {
+      <textarea name="input" z-input [zStatus]="status"
+                  [formControl]="ctrl" [placeholder]="placeholder()"
+                  class="w-full h-fit bg-card" [rows]="rows()"
+      ></textarea>
+    } @else {
+      <input name="input" z-input [type]="type()" [zStatus]="status"
+             [formControl]="ctrl" [placeholder]="placeholder()"
+             class="w-full"
+      />
+    }
   </z-form-control>
 
   @if (status === 'error') {

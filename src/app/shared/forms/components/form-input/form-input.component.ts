@@ -13,6 +13,7 @@ export type FormInputFieldType =
   | "number"
   | "tel"
   | "text"
+  | "textarea"
   | "password";
 
 @Component({
@@ -36,8 +37,10 @@ export type FormInputFieldType =
 export class FormInputComponent {
   readonly control = input.required<FormControl>();
   readonly label = input.required<string>();
+
   readonly type = input<FormInputFieldType>('text');
   readonly placeholder = input<string>('');
+  readonly rows = input<number>(5);
 
   protected readonly isRequired = computed(() => this.control().hasValidator(Validators.required));
 }
