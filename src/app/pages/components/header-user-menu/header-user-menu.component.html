@@ -1,5 +1,6 @@
 <button z-button zType="outline" z-dropdown [zDropdownMenu]="menu" zTrigger="click" zDirection="left">
-  <z-icon zType="user"></z-icon>
+  <z-icon zType="user" zSize="xl"></z-icon>
+  <span class="hidden sm:block">{{auth.isAuthenticated() ? "Profile" : "Log in"}}</span>
 </button>
 <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
   @if (auth.isAuthenticated()) {
