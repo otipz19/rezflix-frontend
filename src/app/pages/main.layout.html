@@ -1,23 +1,26 @@
 <div class="bg-hero-pattern w-full h-screen bg-center bg-cover absolute z-0"></div>
 
-<nav class="sticky bg-black/65 w-full h-16 top-0 left-0 z-20 flex justify-between items-center px-4 md:px-8">
-  <div class="flex flex-row justify-between items-center gap-4 cursor-pointer" [routerLink]="['/']">
-    <img src="/logo.png" alt="Logo" class="h-6 w-auto"/>
-    <span class="text-3xl tracking-widest">REZFLIX</span>
+<div class="min-h-screen flex flex-col">
+  <nav class="sticky bg-black/65 w-full h-16 top-0 left-0 z-20 flex justify-between items-center px-4 md:px-8">
+    <div class="flex flex-row justify-between items-center gap-4 cursor-pointer" [routerLink]="['/']">
+      <img src="/logo.png" alt="Logo" class="h-6 w-auto"/>
+      <span class="text-3xl tracking-widest">REZFLIX</span>
+    </div>
+
+    <div class="flex flex-row justify-between items-center gap-4 md:gap-6">
+      @if (auth.hasRole(UserRoleDto.CONTENT_MANAGER)) {
+        <a [routerLink]="['/', 'films', 'create']" z-button zType="default"
+           class="flex flex-row justify-between items-center gap-2">
+          <z-icon zType="plus" zSize="xl"></z-icon>
+          <span class="hidden sm:block">Upload new movie</span>
+        </a>
+      }
+
+      <app-header-user-menu/>
+    </div>
+  </nav>
+
+  <div class="flex-1 w-full max-w-7xl mx-auto p-4 pb-12 z-10 relative">
+    <router-outlet></router-outlet>
   </div>
-
-  <div class="flex flex-row justify-between items-center gap-4 md:gap-6">
-    @if (auth.hasRole(UserRoleDto.CONTENT_MANAGER)) {
-      <a [routerLink]="['/', 'films', 'create']" z-button zType="default" class="flex flex-row justify-between items-center gap-2">
-        <z-icon zType="plus" zSize="xl"></z-icon>
-        <span class="hidden sm:block">Upload new movie</span>
-      </a>
-    }
-
-    <app-header-user-menu/>
-  </div>
-</nav>
-
-<div class="w-full max-w-7xl mx-auto p-4 pb-12 z-10 relative">
-  <router-outlet></router-outlet>
 </div>
