@@ -6,7 +6,6 @@ import {filmsPageEvents} from './events';
 import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {NotifyService} from '../../../../notify/services/notify.service';
-import {HttpErrorResponse} from '@angular/common/http';
 
 type FilmsPageState = {
   films: Array<FilmDto>,
@@ -81,13 +80,7 @@ export const FilmsPageStore = signalStore(
     notifyLoadError$: events
       .on(filmsPageEvents.fetchListFailed)
       .pipe(
-        tap(({payload: err}) => {
-          if(err instanceof HttpErrorResponse) {
-            notify.showErrorToast(err.message);
-          } else {
-            console.log(err);
-          }
-        })
+        tap(({payload: err}) => notify.showHttpError(err))
       )
   }))
 );
