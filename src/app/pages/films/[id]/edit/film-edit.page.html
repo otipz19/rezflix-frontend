@@ -1,2 +1,22 @@
-<p>film-edit-page</p>
-<p>{{film().title}}</p>
+<h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">{{film().title}}</h1>
+
+<div class="mt-6 flex gap-12 flex-wrap">
+  <img src="/no-film-poster-vertical.png" alt="Film poster" class="rounded-lg h-auto max-h-96 w-auto"/>
+
+  <div class="flex flex-col gap-5">
+    <div>
+      <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Rating</p>
+      <div class="mt-2 flex flex-row items-center gap-1">
+        <img src="/star.svg" alt="Star icon" class="size-6 object-contain"/>
+        <p class="font-bold text-base">{{ film().totalRating }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-6">
+  <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Description</p>
+  <p class="mt-2 text-md leading-relaxed">
+    {{film().description}}
+  </p>
+</div>
