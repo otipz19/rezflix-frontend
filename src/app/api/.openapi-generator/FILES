@@ -9,6 +9,7 @@ api/filmCollectionController.service.ts
 api/filmCommentController.service.ts
 api/filmController.service.ts
 api/filmDubbingController.service.ts
+api/filmEpisodeController.service.ts
 api/filmInfoLookupController.service.ts
 api/filmRatingController.service.ts
 api/userController.service.ts
@@ -21,11 +22,16 @@ model/commentDto.ts
 model/commentListDto.ts
 model/createCommentDto.ts
 model/createDubbingDto.ts
+model/createEpisodeRequest.ts
 model/createUserDto.ts
 model/currentUserInfoDto.ts
 model/dubbingCriteriaDto.ts
 model/dubbingDto.ts
 model/dubbingListDto.ts
+model/episodeCriteriaDto.ts
+model/episodeDto.ts
+model/episodeListDto.ts
+model/episodeStatusDto.ts
 model/errorResponseDto.ts
 model/filmCollectionCriteriaDto.ts
 model/filmCollectionDto.ts
@@ -46,6 +52,7 @@ model/shortFilmCollectionDto.ts
 model/shortUserDto.ts
 model/updateCommentDto.ts
 model/updateDubbingDto.ts
+model/updateEpisodeDto.ts
 model/upsertFilmCollectionDto.ts
 model/upsertFilmDto.ts
 model/userCriteriaDto.ts
