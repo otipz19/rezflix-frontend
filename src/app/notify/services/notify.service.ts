@@ -37,18 +37,7 @@ export class NotifyService {
       return innerObservable
         .pipe(
           catchError(error => {
-            if (error && error instanceof HttpErrorResponse && error.status === 401) {
-              this.showErrorToast("Authentication failed");
-              this.router.navigate(['/', 'auth', 'login']);
-            } else {
-              if (typeof error === 'string') {
-                this.showErrorToast(error);
-              } else if (error && error.message) {
-                this.showErrorToast(error.message);
-              } else {
-                this.showErrorToast();
-              }
-            }
+            this.showHttpError(error);
             return EMPTY;
           })
         )
@@ -74,6 +63,23 @@ export class NotifyService {
           })
         )
     };
+  }
+
+  showHttpError(error: any) {
+    if(error && error instanceof HttpErrorResponse) {
+      if (error.status === 401) {
+        this.showErrorToast("Authentication failed");
+        this.router.navigate(['/', 'auth', 'login']);
+      } else if('message' in error.error) {
+        this.showErrorToast(error.error.message);
+      } else {
+        this.showErrorToast();
+      }
+    } else if (typeof error === 'string') {
+      this.showErrorToast(error);
+    } else {
+      this.showErrorToast();
+    }
   }
 
   showErrorToast(message?: string) {
