@@ -14,14 +14,13 @@ export class EditFilmInfoService {
   private readonly notify = inject(NotifyService);
 
   edit$(id: FilmDto['id'], initialDto: UpsertFilmDto): Observable<void> {
-    return this.dialogService.upsert(
+    return this.dialogService.upsert$(
       {
         zTitle: 'Edit Movie Info',
-        zDescription: `Make changes to your movie info here. Click save when you're done.`,
+        zDescription: `Make changes to movie info here. Click save when you're done.`,
         zContent: EditFilmInfoFormComponent,
         zData: initialDto,
         zOkText: 'Save changes',
-        zWidth: '425px',
       },
       (updatedFilm: UpsertFilmDto) => {
         return this.api.updateFilm(id, updatedFilm)

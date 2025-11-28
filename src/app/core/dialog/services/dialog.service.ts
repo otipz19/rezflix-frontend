@@ -4,13 +4,34 @@ import {ZardDialogService} from '@shared/zardui/components/dialog/dialog.service
 import {catchError, EMPTY, filter, Observable, switchMap} from 'rxjs';
 import {IUpsertDialogComponent} from '../abstract/upsert-dialog-component.interface';
 
+export type ConfirmDialogConfig = Pick<ZardDialogOptions<any, any>, 'zContent' | 'zOkText' | 'zCancelText' | 'zOkDestructive'>;
+
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
   private readonly zardDialogService = inject(ZardDialogService);
 
-  upsert<TData extends object, TComponent extends IUpsertDialogComponent<TData>>(
+  confirm$(config: ConfirmDialogConfig): Observable<void> {
+    return new Observable<void>(subscriber => {
+      const dialogRef = this.zardDialogService.create({
+        ...config,
+        zTitle: 'Confirmation',
+        zWidth: '425px',
+        zOnOk: () => {
+          subscriber.next();
+          subscriber.complete();
+        },
+        zOnCancel: () => subscriber.complete()
+      });
+
+      return () => {
+        dialogRef.close();
+      };
+    });
+  }
+
+  upsert$<TData extends object, TComponent extends IUpsertDialogComponent<TData>>(
     config: Omit<ZardDialogOptions<TComponent, TData>, 'zOnOk' | 'zOnCancel'>,
     submit$: (value: TData) => Observable<void>
   ): Observable<void> {
@@ -19,6 +40,7 @@ export class DialogService {
 
       const dialogRef = this.zardDialogService.create<TComponent, TData>({
         ...config,
+        zWidth: config.zWidth ?? '425px',
         zOnOk: submitEvent,
         zOnCancel: () => {
           subscriber.complete();

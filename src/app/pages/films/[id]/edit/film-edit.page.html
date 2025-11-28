@@ -9,6 +9,14 @@
       <z-icon zType="settings" zSize="xl"></z-icon>
       <span class="hidden sm:block">Edit info</span>
     </button>
+
+    <button (click)="onDeleteFilm()"
+            z-button
+            zType="destructive"
+            class="flex flex-row justify-between items-center gap-2">
+      <z-icon zType="trash" zSize="xl"></z-icon>
+      <span class="hidden sm:block">Delete</span>
+    </button>
   </div>
 </div>
 
