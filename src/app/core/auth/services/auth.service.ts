@@ -1,5 +1,5 @@
 import {computed, inject, Injectable, signal} from "@angular/core";
-import {catchError, EMPTY, finalize, map, Observable, switchMap, tap, throwError} from "rxjs";
+import {catchError, EMPTY, finalize, map, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {
@@ -45,10 +45,10 @@ export class AuthService {
 
   readonly username = computed(() => {
     const user = this.currentUser();
-    if(!user) {
+    if (!user) {
       return 'ANONYMOUS';
     }
-    if(user.role === UserRoleDto.SUPER_ADMIN) {
+    if (user.role === UserRoleDto.SUPER_ADMIN) {
       return 'SUPER_ADMIN';
     }
     return user.info?.username ?? 'NONAME';
@@ -84,6 +84,17 @@ export class AuthService {
 
     return this.setCurrentUser$()
       .pipe(
+        // Backend may return ANONYMOUS user if access token expired,
+        // so try to refresh session in this case
+        switchMap(() => {
+          if (this.role() === UserRoleDto.ANONYMOUS) {
+            return this.refreshSession$()
+              .pipe(
+                switchMap(() => this.setCurrentUser$())
+              );
+          }
+          return of();
+        }),
         catchError(error => {
           // If token expired and so restoration failed
           if (error instanceof HttpErrorResponse && error.status === 401) {
