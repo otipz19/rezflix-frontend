@@ -92,7 +92,7 @@ export class AuthService {
           }
           return throwError(() => error);
         }),
-        tap(() => this._isLoadingUser.set(false)),
+        finalize(() => this._isLoadingUser.set(false)),
       );
   }
 
