@@ -3,8 +3,10 @@ import {signalStore, withState} from '@ngrx/signals';
 import {Events, on, withEffects, withReducer} from '@ngrx/signals/events';
 import {inject} from '@angular/core';
 import {filmsPageEvents} from './events';
-import {switchMap} from 'rxjs';
+import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
+import {NotifyService} from '../../../../notify/services/notify.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 type FilmsPageState = {
   films: Array<FilmDto>,
@@ -55,7 +57,8 @@ export const FilmsPageStore = signalStore(
   withEffects((
     store,
     events = inject(Events),
-    api = inject(FilmControllerService)
+    api = inject(FilmControllerService),
+    notify = inject(NotifyService)
   ) => ({
     loadFilmsList$: events
       .on(filmsPageEvents.opened, filmsPageEvents.searchQueryChanged, filmsPageEvents.paginationChanged)
@@ -69,10 +72,21 @@ export const FilmsPageStore = signalStore(
             .pipe(
               mapResponse({
                 next: res => filmsPageEvents.fetchListSuccess(res),
-                // TODO: add type-checking add use request error messages
-                error: () => filmsPageEvents.fetchListFailed("Request failed")
+                error: err => filmsPageEvents.fetchListFailed(err)
               })
             )
+        })
+      ),
+
+    notifyLoadError$: events
+      .on(filmsPageEvents.fetchListFailed)
+      .pipe(
+        tap(({payload: err}) => {
+          if(err instanceof HttpErrorResponse) {
+            notify.showErrorToast(err.message);
+          } else {
+            console.log(err);
+          }
         })
       )
   }))

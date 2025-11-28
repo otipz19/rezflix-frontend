@@ -10,6 +10,6 @@ export const filmsPageEvents = eventGroup({
     searchQueryChanged: type<string>(),
     paginationChanged: type<PaginationChangedEvent>(),
     fetchListSuccess: type<FilmListDto>(),
-    fetchListFailed: type<string>()
+    fetchListFailed: type<any>()
   }
 });
