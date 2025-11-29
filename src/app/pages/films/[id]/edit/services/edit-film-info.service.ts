@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {DialogService} from '../../../../../core/dialog/services/dialog.service';
 import {EditFilmInfoFormComponent} from '../components/edit-film-info-form/edit-film-info-form.component';
 import {FilmControllerService, FilmDto, UpsertFilmDto} from '../../../../../api';
@@ -13,7 +13,7 @@ export class EditFilmInfoService {
   private readonly api = inject(FilmControllerService);
   private readonly notify = inject(NotifyService);
 
-  edit$(id: FilmDto['id'], initialDto: UpsertFilmDto): Observable<void> {
+  edit$(id: FilmDto['id'], initialDto: UpsertFilmDto): Observable<UpsertFilmDto> {
     return this.dialogService.upsert$(
       {
         zTitle: 'Edit Movie Info',
@@ -25,6 +25,7 @@ export class EditFilmInfoService {
       (updatedFilm: UpsertFilmDto) => {
         return this.api.updateFilm(id, updatedFilm)
           .pipe(
+            map(() => updatedFilm),
             this.notify.notifyHttpRequest('Movie info updated successfully!')
           );
       }

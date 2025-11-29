@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FilmDto} from '../../../../api';
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_FILM_KEY} from '../film.resolver';
@@ -7,6 +7,7 @@ import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {EditFilmInfoService} from './services/edit-film-info.service';
 import {DeleteFilmService} from './services/delete-film.service';
 import {Router} from '@angular/router';
+import {FilmStore} from "../film.store";
 
 @Component({
   selector: 'app-film-edit-page',
@@ -15,22 +16,24 @@ import {Router} from '@angular/router';
   imports: [
     ZardButtonComponent,
     ZardIconComponent
-  ]
+  ],
+  providers: [FilmStore]
 })
 export class FilmEditPage {
+  private readonly store = inject(FilmStore);
   private readonly editFilmInfoService = inject(EditFilmInfoService);
   private readonly deleteFilmService = inject(DeleteFilmService);
   private readonly router = inject(Router);
 
-  protected readonly film = signal<FilmDto>(undefined!);
+  protected readonly film = this.store.film;
 
   constructor() {
-    this.film.set(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));
+    this.store.useFilm(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));
   }
 
   protected onEditFilmInfo() {
     this.editFilmInfoService.edit$(this.film().id, this.film())
-      .subscribe();
+      .subscribe(updatedFilm => this.store.update(updatedFilm));
   }
 
   protected onDeleteFilm() {

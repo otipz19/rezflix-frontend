@@ -31,11 +31,11 @@ export class DialogService {
     });
   }
 
-  upsert$<TData extends object, TComponent extends IUpsertDialogComponent<TData>>(
+  upsert$<TData extends object, TComponent extends IUpsertDialogComponent<TData>, TResult>(
     config: Omit<ZardDialogOptions<TComponent, TData>, 'zOnOk' | 'zOnCancel'>,
-    submit$: (value: TData) => Observable<void>
-  ): Observable<void> {
-    return new Observable<void>(subscriber => {
+    submit$: (value: TData) => Observable<TResult>
+  ): Observable<TResult> {
+    return new Observable<TResult>(subscriber => {
       const submitEvent = new EventEmitter<TComponent>();
 
       const dialogRef = this.zardDialogService.create<TComponent, TData>({
@@ -58,8 +58,8 @@ export class DialogService {
             // Silent error handling to keep the dialog open on error
             catchError(() => EMPTY)
           )
-          .subscribe(() => {
-            subscriber.next();
+          .subscribe(res => {
+            subscriber.next(res);
             subscriber.complete();
           });
       })
