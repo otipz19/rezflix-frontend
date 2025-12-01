@@ -40,3 +40,12 @@
     {{ film().description }}
   </p>
 </div>
+
+<div class="mt-16">
+  <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+    @for (dubbing of dubbingList(); track dubbing.id) {
+      <button z-button zType="outline">{{ dubbing.name }}</button>
+    }
+    <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import {computed, inject} from '@angular/core';
-import {DubbingDto, FilmControllerService, FilmDto, FilmDubbingControllerService, UpsertFilmDto} from '../../../api';
+import {DubbingDto, FilmControllerService, FilmDto, FilmDubbingControllerService, UpsertFilmDto} from '../../../../api';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
-import {NotifyService} from '../../../core/notify/services/notify.service';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 import {tap} from 'rxjs';
 
 type FilmState = {
