@@ -29,11 +29,12 @@ export class FilmEditPage {
 
   constructor() {
     this.store.useFilm(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));
+    this.store.loadDubbingList();
   }
 
   protected onEditFilmInfo() {
     this.editFilmInfoService.edit$(this.film().id, this.film())
-      .subscribe(updatedFilm => this.store.update(updatedFilm));
+      .subscribe(updatedFilm => this.store.updateFilm(updatedFilm));
   }
 
   protected onDeleteFilm() {
