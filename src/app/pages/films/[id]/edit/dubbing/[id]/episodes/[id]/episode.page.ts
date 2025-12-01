@@ -20,7 +20,7 @@ export class EpisodePage implements OnInit, OnDestroy {
     fluid: false,
     aspectRatio: '16:9',
     autoplay: false,
-    sources: [{src: this.episode.hlsLink, type: 'application/vnd.apple.mpegurl'}]
+    sources: [{src: 'http://localhost:8080' + this.episode.hlsLink, type: 'application/vnd.apple.mpegurl'}]
   };
 
   private player?: Player;
