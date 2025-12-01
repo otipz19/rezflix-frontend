@@ -2,10 +2,10 @@ import {
   DubbingDto,
   EpisodeDto,
   FilmEpisodeControllerService
-} from '../../../../../api';
+} from '../../../../../../api';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {computed, inject} from '@angular/core';
-import {NotifyService} from '../../../../../core/notify/services/notify.service';
+import {NotifyService} from '../../../../../../core/notify/services/notify.service';
 import {finalize, tap} from 'rxjs';
 
 type DubbingState = {

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, Signal} from '@angular/core';
-import {DubbingDto, EpisodeDto} from '../../../../../api';
+import {DubbingDto, EpisodeDto} from '../../../../../../api';
 import {DubbingStore} from './dubbing.store';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {getFromRoute} from '@shared/routing/get-from-route';

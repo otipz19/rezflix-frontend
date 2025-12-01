@@ -1,8 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {DubbingDto, EpisodeDto, FilmEpisodeControllerService} from '../../../../../../api';
-import {DialogService} from '../../../../../../core/dialog/services/dialog.service';
-import {NotifyService} from '../../../../../../core/notify/services/notify.service';
+import {DubbingDto, EpisodeDto, FilmEpisodeControllerService} from '../../../../../../../api';
+import {DialogService} from '../../../../../../../core/dialog/services/dialog.service';
+import {NotifyService} from '../../../../../../../core/notify/services/notify.service';
 import {
   CreateEpisodeDto,
   CreateEpisodeFormComponent
