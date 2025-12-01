@@ -5,13 +5,16 @@ import {ZardButtonComponent} from '@shared/zardui/components/button/button.compo
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_DUBBING_KEY} from './dubbing.resolver';
 import {UpsertEpisodeService} from './services/upsert-episode.service';
+import {RouterLink, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-dubbing-component',
   templateUrl: 'dubbing-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ZardButtonComponent
+    ZardButtonComponent,
+    RouterOutlet,
+    RouterLink
   ],
   providers: [DubbingStore]
 })
