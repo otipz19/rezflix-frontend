@@ -1,0 +1,12 @@
+<div>
+  <p>Placeholder for player</p>
+</div>
+
+<div class="mt-8">
+  <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+    @for (episode of episodes(); track episode.id) {
+      <button z-button zType="outline">{{ episode.title }}</button>
+    }
+    <button z-button zType="default" (click)="onAddNewEpisode()">Add new episode</button>
+  </div>
+</div>

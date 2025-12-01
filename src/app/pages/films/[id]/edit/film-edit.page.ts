@@ -6,8 +6,8 @@ import {ZardButtonComponent} from '@shared/zardui/components/button/button.compo
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {EditFilmInfoService} from './services/edit-film-info.service';
 import {DeleteFilmService} from './services/delete-film.service';
-import {Router} from '@angular/router';
-import {FilmStore} from "../state/film.store";
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
 
 @Component({
@@ -16,7 +16,9 @@ import {UpsertDubbingService} from './services/upsert-dubbing.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ZardButtonComponent,
-    ZardIconComponent
+    ZardIconComponent,
+    RouterLink,
+    RouterOutlet
   ],
   providers: [FilmStore]
 })

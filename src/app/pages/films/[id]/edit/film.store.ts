@@ -2,7 +2,7 @@ import {computed, inject} from '@angular/core';
 import {DubbingDto, FilmControllerService, FilmDto, FilmDubbingControllerService, UpsertFilmDto} from '../../../../api';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {NotifyService} from '../../../../core/notify/services/notify.service';
-import {tap} from 'rxjs';
+import {finalize, tap} from 'rxjs';
 
 type FilmState = {
   _film: FilmDto | undefined;
@@ -60,6 +60,7 @@ export const FilmStore = signalStore(
             tap(list => {
               patchState(store, {dubbingList: list.items, isLoadingDubbingList: false})
             }),
+            finalize(() => patchState(store, {isLoadingDubbingList: false})),
             notify.notifyHttpError()
           )
           .subscribe();

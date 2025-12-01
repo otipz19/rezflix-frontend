@@ -44,8 +44,12 @@
 <div class="mt-16">
   <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
     @for (dubbing of dubbingList(); track dubbing.id) {
-      <button z-button zType="outline">{{ dubbing.name }}</button>
+      <a z-button zType="outline" [routerLink]="['dubbing', dubbing.id]">{{ dubbing.name }}</a>
     }
     <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
+  </div>
+
+  <div class="mt-8">
+    <router-outlet></router-outlet>
   </div>
 </div>
