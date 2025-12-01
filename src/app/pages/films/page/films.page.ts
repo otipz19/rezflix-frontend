@@ -9,6 +9,7 @@ import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 import {PaginatorComponent} from '@shared/components/paginator/paginator.component';
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
 import {FilmCardSkeletonComponent} from './components/film-card-skeleton/film-card-skeleton.component';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-films-page',
@@ -16,7 +17,8 @@ import {FilmCardSkeletonComponent} from './components/film-card-skeleton/film-ca
     FilmCardComponent,
     SearchBarComponent,
     PaginatorComponent,
-    FilmCardSkeletonComponent
+    FilmCardSkeletonComponent,
+    RouterLink,
   ],
   templateUrl: './films.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
