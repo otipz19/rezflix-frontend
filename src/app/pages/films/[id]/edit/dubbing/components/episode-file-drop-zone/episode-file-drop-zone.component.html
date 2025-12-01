@@ -1,0 +1,17 @@
+<ngx-file-drop [multiple]="false"
+               [accept]="accept"
+               dropZoneClassName="drop-zone"
+               contentClassName="drop-zone-content"
+               (onFileDrop)="onDrop($event)">
+  <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+    <div class="relative w-full h-full flex flex-col justify-center items-center" (click)="openFileSelector()">
+      @let imageSrc = $imageSrc();
+      @if (!imageSrc) {
+        <span class="text-muted-foreground">Drop video file here</span>
+      } @else {
+        <img [src]="imageSrc" alt="Preview" class="max-w-8/12 max-h-8/12"/>
+        <button type="button" class="absolute top-6 right-6 cursor-pointer z-50" (click)="onRemove($event)">✖</button>
+      }
+    </div>
+  </ng-template>
+</ngx-file-drop>

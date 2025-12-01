@@ -129,3 +129,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.drop-zone {
+  height: 100%;
+  max-height: 345px;
+  border-radius: 8px;
+  border: 2px dashed #E6E7E7;
+}
+
+.drop-zone-content {
+  height: 100%;
+  width: 100%;
+}

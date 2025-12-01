@@ -4,6 +4,7 @@ import {DubbingStore} from './dubbing.store';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_DUBBING_KEY} from './dubbing.resolver';
+import {UpsertEpisodeService} from './services/upsert-episode.service';
 
 @Component({
   selector: 'app-dubbing-component',
@@ -16,10 +17,12 @@ import {RESOLVE_DUBBING_KEY} from './dubbing.resolver';
 })
 export class DubbingPageComponent {
   private readonly store = inject(DubbingStore);
+  private readonly upsertEpisodeService = inject(UpsertEpisodeService);
 
   protected readonly dubbing = this.store.dubbing;
-  protected readonly episodes: Signal<EpisodeDto[]> = this.store.episodes;
+  protected readonly episodes: Signal<EpisodeDto[]> = this.store.sortedEpisodes;
   protected readonly isLoadingEpisodes: Signal<boolean> = this.store.isLoadingEpisodes;
+  protected readonly lastWatchOrder: Signal<number> = this.store.lastWatchOrder;
 
   constructor() {
     this.store.useDubbing(getFromRoute<DubbingDto>(RESOLVE_DUBBING_KEY));
@@ -27,6 +30,7 @@ export class DubbingPageComponent {
   }
 
   protected onAddNewEpisode() {
-
+    this.upsertEpisodeService.create$(this.dubbing().id, this.lastWatchOrder())
+      .subscribe(() => this.store.loadEpisodes());
   }
 }

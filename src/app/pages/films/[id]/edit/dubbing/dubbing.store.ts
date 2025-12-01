@@ -28,6 +28,19 @@ export const DubbingStore = signalStore(
         throw new Error("DubbingStore: dubbing is undefined");
       }
       return dubbing;
+    }),
+
+    sortedEpisodes: computed(() => {
+      const episodes = [...store.episodes()];
+      episodes.sort((a, b) => a.watchOrder - b.watchOrder);
+      return episodes;
+    })
+  })),
+
+  withComputed((store) => ({
+    lastWatchOrder: computed(() => {
+      const eps = store.sortedEpisodes();
+      return eps.length === 0 ? -1 : eps[eps.length - 1].watchOrder;
     })
   })),
 
