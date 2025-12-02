@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, Signal, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, Signal, signal} from '@angular/core';
 import {FilmsPageStore} from './state/store';
 import {injectDispatch} from '@ngrx/signals/events';
 import {filmsPageEvents} from './state/events';
 import {FilmDto} from '../../../api';
 import {FilmCardComponent} from './components/film-card/film-card.component';
 import {SearchBarComponent} from './components/search-bar/search-bar.component';
-import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, EMPTY, Subject} from 'rxjs';
 import {PaginatorComponent} from '@shared/components/paginator/paginator.component';
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
 import {FilmCardSkeletonComponent} from './components/film-card-skeleton/film-card-skeleton.component';
@@ -16,6 +16,7 @@ import {ZardCarouselItemComponent} from '@shared/zardui/components/carousel/caro
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {FilmRecommendationsControllerService, UserRoleDto} from '../../../api';
 import {ZardCarouselPluginsService} from '@shared/zardui/components/carousel/carousel-plugins.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-films-page',
@@ -36,6 +37,10 @@ import {ZardCarouselPluginsService} from '@shared/zardui/components/carousel/car
 export class FilmsPage implements OnInit {
   private readonly store = inject(FilmsPageStore);
   private readonly dispatch = injectDispatch(filmsPageEvents);
+  protected readonly auth = inject(AuthService);
+  private readonly recommendationsApi = inject(FilmRecommendationsControllerService);
+  private readonly carouselPlugins = inject(ZardCarouselPluginsService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly searchQueryChange$ = new Subject<string>();
 
@@ -49,14 +54,8 @@ export class FilmsPage implements OnInit {
 
   protected readonly recommendations = signal<FilmDto[]>([]);
 
-  protected readonly UserRoleDto = UserRoleDto;
-
-  protected readonly auth = inject(AuthService);
-  private readonly recommendationsApi = inject(FilmRecommendationsControllerService);
-  private readonly carouselPlugins = inject(ZardCarouselPluginsService);
-
   protected readonly recPlugins = signal<any[]>([]);
-  protected readonly recCarouselOptions = { align: 'center', loop: true } as const;
+  protected readonly recCarouselOptions = {align: 'center', loop: true} as const;
 
   constructor() {
     this.searchQueryChange$
@@ -73,21 +72,24 @@ export class FilmsPage implements OnInit {
   }
 
   private initCarousel() {
-        try {
-      if (this.auth.hasRole(UserRoleDto.VIEWER)) {
-        this.recommendationsApi.getRecommendations('body', false).subscribe(res => {
-          if (res && res.length > 0) {
-            this.recommendations.set(res);
-          }
-        });
-      }
-    } catch (e) {
-      // swallow errors since recommendations are optional
+    if (!this.auth.hasRole(UserRoleDto.VIEWER)) {
+      return;
     }
+
+    this.recommendationsApi.getRecommendations()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => EMPTY),
+      )
+      .subscribe(res => this.recommendations.set(res));
 
     (async () => {
       try {
-        const autoplay = await this.carouselPlugins.createAutoplayPlugin({ delay: 3000, stopOnInteraction: true, playOnInit: true });
+        const autoplay = await this.carouselPlugins.createAutoplayPlugin({
+          delay: 3000,
+          stopOnInteraction: true,
+          playOnInit: true
+        });
         this.recPlugins.set([autoplay]);
       } catch (err) {
         // swallow errors since recommendations are optional
@@ -102,4 +104,6 @@ export class FilmsPage implements OnInit {
   protected onPageChanged(paginationEvent: PaginationChangedEvent) {
     this.dispatch.paginationChanged(paginationEvent);
   }
+
+  protected readonly UserRoleDto = UserRoleDto;
 }
