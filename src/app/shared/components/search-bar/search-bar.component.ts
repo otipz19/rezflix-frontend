@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, effect, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -13,6 +13,8 @@ import {FormsModule} from '@angular/forms';
   }
 })
 export class SearchBarComponent {
+  readonly placeholder = input<string>('Search...');
+
   readonly queryChanged = output<string>();
 
   protected readonly query = signal('');

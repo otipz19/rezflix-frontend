@@ -5,7 +5,7 @@
                 <button z-button class="rounded-lg" (click)="openCreateUser()" aria-label="Create user">
           <z-icon zType="plus"></z-icon>
         </button>
-        <app-search-bar class="flex-5" (queryChanged)="onQueryChanged($event)"/>
+        <app-search-bar class="flex-5" (queryChanged)="onQueryChanged($event)" placeholder="Search users..."/>
         <app-type-selector class="flex-2" (typeChanged)="onTypeChanged($event)"></app-type-selector>
       </div>
     </div>

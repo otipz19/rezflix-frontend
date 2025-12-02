@@ -6,7 +6,6 @@ import {UserDto, UserTypeDto} from '../../../api';
 import {UserCardComponent} from './components/user-card/user-card.component';
 import {PaginatorComponent} from '@shared/components/paginator/paginator.component';
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
-import {SearchBarComponent} from './components/search-bar/search-bar.component';
 import {TypeSelectorComponent} from './components/type-selector/type-selector.component';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
@@ -15,6 +14,7 @@ import {UserControllerService, CreateUserDto} from '../../../api';
 import {NotifyService} from '../../../core/notify/services/notify.service';
 import {CreateUserFormComponent} from './components/create-user-form/create-user-form.component';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {SearchBarComponent} from '@shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-super-admin-page',
