@@ -5,9 +5,8 @@
   <div class="my-4 px-6">
     <h3 class="font-bold text-base line-clamp-1">{{ film().title }}</h3>
 
-    <div class="mt-2 flex flex-row items-center gap-1">
-      <img src="/star.svg" alt="Star icon" class="size-4 object-contain"/>
-      <p class="font-bold text-base">{{ film().totalRating }}</p>
+    <div class="mt-2 flex flex-row items-center gap-4 pb-2">
+      <app-star-rating-bar sizeCs="size-4" [disableHovering]="true" [rating]="film().totalRating"/>
     </div>
   </div>
 </div>
