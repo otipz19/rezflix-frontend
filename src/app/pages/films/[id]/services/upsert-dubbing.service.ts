@@ -19,7 +19,7 @@ export class UpsertDubbingService {
   create$(filmId: FilmDto['id']): Observable<DubbingDto['id']> {
     return this.dialogService.upsert$(
       {
-        zTitle: 'Create dubbing',
+        zTitle: 'Create Dubbing',
         zContent: UpsertDubbingFormComponent,
         zOkText: 'Save changes',
       },
@@ -27,6 +27,23 @@ export class UpsertDubbingService {
         return this.api.createDubbing({filmId, ...dto})
           .pipe(
             this.notify.notifyHttpRequest('Dubbing was created successfully!')
+          );
+      }
+    );
+  }
+
+  update$(initDto: DubbingDto): Observable<UpdateDubbingDto> {
+    return this.dialogService.upsert$(
+      {
+        zTitle: 'Edit Dubbing',
+        zContent: UpsertDubbingFormComponent,
+        zOkText: 'Save changes',
+        zData: {name: initDto.name}
+      },
+      (dto: UpdateDubbingDto) => {
+        return this.api.updateDubbing(initDto.id, dto)
+          .pipe(
+            this.notify.notifyHttpRequest('Dubbing was updated successfully!')
           );
       }
     );

@@ -2,13 +2,13 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ControlsOf} from '@shared/forms/utils/controls-of';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
-import {CreateEpisodeRequest, UpdateEpisodeDto} from '../../../../../api';
+import {CreateEpisodeRequest} from '../../../../../api';
 import {IUpsertDialogComponent} from '../../../../../core/dialog/abstract/upsert-dialog-component.interface';
 import {map, Observable} from 'rxjs';
 import {validateFormSubmit$} from '@shared/forms/utils/check-valid-form-submit';
 import {EpisodeFileDropZoneComponent} from '../episode-file-drop-zone/episode-file-drop-zone.component';
 
-export type CreateEpisodeMetadataDto = Pick<UpdateEpisodeDto, 'title'>
+export type CreateEpisodeMetadataDto = {title: string};
 export type CreateEpisodeDto = CreateEpisodeRequest & CreateEpisodeMetadataDto;
 
 @Component({

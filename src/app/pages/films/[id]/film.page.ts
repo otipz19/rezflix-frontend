@@ -15,6 +15,8 @@ import {ZardDividerComponent} from '@shared/zardui/components/divider/divider.co
 import {ZardDropdownDirective} from '@shared/zardui/components/dropdown/dropdown-trigger.directive';
 import {ZardDropdownMenuContentComponent} from '@shared/zardui/components/dropdown/dropdown-menu-content.component';
 import {ZardDropdownMenuItemComponent} from '@shared/zardui/components/dropdown/dropdown-item.component';
+import {DeleteDubbingService} from './services/delete-dubbing.service';
+import {DeleteEpisodeService} from './services/delete-episode.service';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -39,6 +41,8 @@ export class FilmPage {
   private readonly deleteFilmService = inject(DeleteFilmService);
   private readonly upsertDubbingService = inject(UpsertDubbingService);
   private readonly upsertEpisodeService = inject(UpsertEpisodeService);
+  private readonly deleteDubbingService = inject(DeleteDubbingService);
+  private readonly deleteEpisodeService = inject(DeleteEpisodeService);
 
   protected readonly film: Signal<FilmDto> = this.store.film;
   protected readonly dubbingList: Signal<DubbingDto[]> = this.store.dubbingList;
@@ -73,6 +77,16 @@ export class FilmPage {
       .subscribe(() => this.store.loadDubbingListWithEpisodes());
   }
 
+  protected onEditDubbing(dubbing: DubbingDto) {
+    this.upsertDubbingService.update$(dubbing)
+      .subscribe(() => this.store.loadDubbingListWithEpisodes());
+  }
+
+  protected onDeleteDubbing(dubbing: DubbingDto) {
+    this.deleteDubbingService.delete$(dubbing.id)
+      .subscribe(() => this.store.loadDubbingListWithEpisodes());
+  }
+
   protected onAddNewEpisode() {
     const activeDubId = this.activeDubbingId();
     if(activeDubId) {
@@ -80,6 +94,16 @@ export class FilmPage {
         // TODO: prevent full reload
         .subscribe(() => this.store.loadDubbingListWithEpisodes());
     }
+  }
+
+  protected onEditEpisode(episode: EpisodeDto) {
+    this.upsertEpisodeService.update$(episode)
+      .subscribe(() => this.store.loadDubbingListWithEpisodes());
+  }
+
+  protected onDeleteEpisode(episode: EpisodeDto) {
+    this.deleteEpisodeService.delete$(episode.id)
+      .subscribe(() => this.store.loadDubbingListWithEpisodes());
   }
 
   protected onSetActiveDubbing(dubbingId: DubbingDto['id']) {

@@ -64,11 +64,11 @@
           {{ dubbing.name }}
         </button>
         <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
-          <z-dropdown-menu-item>
+          <z-dropdown-menu-item (click)="onEditDubbing(dubbing)">
             Edit
           </z-dropdown-menu-item>
           <z-divider zSpacing="sm" class="-mx-1"/>
-          <z-dropdown-menu-item>
+          <z-dropdown-menu-item (click)="onDeleteDubbing(dubbing)">
             Delete
           </z-dropdown-menu-item>
         </z-dropdown-menu-content>
@@ -118,11 +118,11 @@
                 {{ episode.title }}
               </button>
               <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
-                <z-dropdown-menu-item>
+                <z-dropdown-menu-item (click)="onEditEpisode(episode)">
                   Edit
                 </z-dropdown-menu-item>
                 <z-divider zSpacing="sm" class="-mx-1"/>
-                <z-dropdown-menu-item>
+                <z-dropdown-menu-item (click)="onDeleteEpisode(episode)">
                   Delete
                 </z-dropdown-menu-item>
               </z-dropdown-menu-content>
