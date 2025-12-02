@@ -32,12 +32,12 @@ export class NotifyService {
   /**
    * Completes instead of throwing error
    */
-  notifyHttpError<T>(): (innerObservable: Observable<T>) => Observable<T> {
+  notifyHttpError<T>(ignoredStatuses: number[] = []): (innerObservable: Observable<T>) => Observable<T> {
     return (innerObservable: Observable<T>) => {
       return innerObservable
         .pipe(
           catchError(error => {
-            this.showHttpError(error);
+            this.showHttpError(error, ignoredStatuses);
             return EMPTY;
           })
         )
@@ -65,8 +65,12 @@ export class NotifyService {
     };
   }
 
-  showHttpError(error: any) {
+  showHttpError(error: any, ignoredStatuses: number[] = []) {
     if(error && error instanceof HttpErrorResponse) {
+      if(ignoredStatuses.includes(error.status)) {
+        return;
+      }
+
       if (error.status === 401) {
         this.showErrorToast("Authentication failed");
         this.router.navigate(['/', 'auth', 'login']);

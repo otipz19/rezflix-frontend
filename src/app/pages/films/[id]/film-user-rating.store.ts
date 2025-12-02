@@ -30,7 +30,7 @@ export class FilmUserRatingStore {
           next: ({rating}) => this._userRating.set(rating),
           error: () => this._userRating.set(oldVal),
         }),
-        this.notify.notifyHttpError()
+        this.notify.notifyHttpError([404])
       )
       .subscribe();
   }
