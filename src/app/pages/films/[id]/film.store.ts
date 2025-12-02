@@ -7,7 +7,8 @@ import {
   FilmDto,
   FilmDubbingControllerService,
   FilmEpisodeControllerService,
-  UpsertFilmDto
+  UpsertFilmDto,
+  UserRoleDto
 } from '../../../api';
 import {NotifyService} from '../../../core/notify/services/notify.service';
 import {catchError, finalize, forkJoin, map, of, switchMap, tap} from 'rxjs';
@@ -67,7 +68,10 @@ export class FilmStore {
     if (!arr) {
       return [];
     }
-    const episodes = [...arr];
+    let episodes = [...arr];
+    if (this.auth.role() != UserRoleDto.CONTENT_MANAGER) {
+      episodes = episodes.filter(e => e.status === EpisodeStatusDto.RENDERED);
+    }
     episodes.sort((a, b) => a.watchOrder - b.watchOrder);
     return episodes;
   });

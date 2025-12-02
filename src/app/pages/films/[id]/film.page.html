@@ -2,21 +2,25 @@
   <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">{{ film().title }}</h1>
 
   <div class="w-fit flex flex-row justify-between items-center gap-2 md:gap-4">
-    <button (click)="onEditFilmInfo()"
-            z-button
-            zType="default"
-            class="flex flex-row justify-between items-center gap-2">
-      <z-icon zType="settings" zSize="xl"></z-icon>
-      <span class="hidden sm:block">Edit info</span>
-    </button>
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button (click)="onEditFilmInfo()"
+              z-button
+              zType="default"
+              class="flex flex-row justify-between items-center gap-2">
+        <z-icon zType="settings" zSize="xl"></z-icon>
+        <span class="hidden sm:block">Edit info</span>
+      </button>
+    }
 
-    <button (click)="onDeleteFilm()"
-            z-button
-            zType="destructive"
-            class="flex flex-row justify-between items-center gap-2">
-      <z-icon zType="trash" zSize="xl"></z-icon>
-      <span class="hidden sm:block">Delete</span>
-    </button>
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button (click)="onDeleteFilm()"
+              z-button
+              zType="destructive"
+              class="flex flex-row justify-between items-center gap-2">
+        <z-icon zType="trash" zSize="xl"></z-icon>
+        <span class="hidden sm:block">Delete</span>
+      </button>
+    }
   </div>
 </div>
 
@@ -42,6 +46,10 @@
 </div>
 
 <div class="mt-16">
+  @if (dubbingList().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
+    <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Dubbings</p>
+  }
+
   <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
     @for (dubbing of dubbingList(); track dubbing.id) {
       <button z-button
@@ -50,30 +58,44 @@
         {{ dubbing.name }}
       </button>
     }
-    <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
+    } @else if (dubbingList().length === 0) {
+      <p class="text-3xl w-full text-center p-16">No content yet...</p>
+    }
   </div>
 
-  <div class="mt-8">
-    <div>
-      @let link = activeEpisodeLink();
-      @if (link) {
-        <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
-      } @else {
-        <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() }}</p>
-      }
-    </div>
-
+  @if (dubbingList().length > 0) {
     <div class="mt-8">
-      <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
-        @for (episode of activeEpisodes(); track episode.id) {
-          <button z-button
-                  [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
-                  (click)="onSetActiveEpisode(episode.id)">
-            {{ episode.title }}
-          </button>
+      <div>
+        @let link = activeEpisodeLink();
+        @if (link) {
+          <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
+        } @else if (activeEpisodes().length > 0) {
+          <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() }}</p>
         }
-        <button z-button zType="default" (click)="onAddNewEpisode()">Add new episode</button>
+      </div>
+
+      <div class="mt-8">
+        @if (activeEpisodes().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
+          <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Episodes</p>
+        }
+
+        <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+          @for (episode of activeEpisodes(); track episode.id) {
+            <button z-button
+                    [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                    (click)="onSetActiveEpisode(episode.id)">
+              {{ episode.title }}
+            </button>
+          }
+          @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+            <button z-button zType="default" (click)="onAddNewEpisode()">Add new episode</button>
+          } @else if (activeEpisodes().length === 0) {
+            <p class="text-3xl w-full text-center p-16">No episodes yet...</p>
+          }
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, Signal} from '@angular/core';
-import {DubbingDto, EpisodeDto, FilmDto} from '../../../api';
+import {DubbingDto, EpisodeDto, FilmDto, UserRoleDto} from '../../../api';
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_FILM_KEY} from './film.resolver';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
 import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
 import {UpsertEpisodeService} from './services/upsert-episode.service';
+import {AuthService} from '../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -24,6 +25,7 @@ import {UpsertEpisodeService} from './services/upsert-episode.service';
 export class FilmPage {
   private readonly store = inject(FilmStore);
   private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
 
   private readonly editFilmInfoService = inject(EditFilmInfoService);
   private readonly deleteFilmService = inject(DeleteFilmService);
@@ -79,4 +81,6 @@ export class FilmPage {
   protected onSetActiveEpisode(episodeId: EpisodeDto['id']) {
     this.store.setActiveEpisode(episodeId);
   }
+
+  protected readonly UserRoleDto = UserRoleDto;
 }
