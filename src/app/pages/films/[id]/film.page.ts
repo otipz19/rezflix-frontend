@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, Signal} from '@angular/core';
-import {DubbingDto, EpisodeDto, FilmDto} from '../../../../api';
+import {DubbingDto, EpisodeDto, FilmDto} from '../../../api';
 import {getFromRoute} from '@shared/routing/get-from-route';
-import {RESOLVE_FILM_KEY} from '../film.resolver';
+import {RESOLVE_FILM_KEY} from './film.resolver';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {EditFilmInfoService} from './services/edit-film-info.service';

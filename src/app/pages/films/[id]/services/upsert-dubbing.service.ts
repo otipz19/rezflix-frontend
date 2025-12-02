@@ -1,10 +1,10 @@
 import {inject, Injectable} from '@angular/core';
-import {DialogService} from '../../../../../core/dialog/services/dialog.service';
+import {DialogService} from '../../../../core/dialog/services/dialog.service';
 import {
   DubbingDto,
   FilmDto, FilmDubbingControllerService, UpdateDubbingDto,
-} from '../../../../../api';
-import {NotifyService} from '../../../../../core/notify/services/notify.service';
+} from '../../../../api';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 import {Observable} from 'rxjs';
 import {UpsertDubbingFormComponent} from '../components/upsert-dubbing-form/upsert-dubbing-form.component';
 

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {BaseUpsertDialogComponent} from '../../../../../../core/dialog/abstract/base-upsert-dialog-component';
-import {UpdateDubbingDto} from '../../../../../../api';
+import {BaseUpsertDialogComponent} from '../../../../../core/dialog/abstract/base-upsert-dialog-component';
+import {UpdateDubbingDto} from '../../../../../api';
 import {FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ControlsOf} from '@shared/forms/utils/controls-of';
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';

@@ -1,8 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {Observable, switchMap} from 'rxjs';
-import {DialogService} from '../../../../../core/dialog/services/dialog.service';
-import {FilmControllerService, FilmDto} from '../../../../../api';
-import {NotifyService} from '../../../../../core/notify/services/notify.service';
+import {DialogService} from '../../../../core/dialog/services/dialog.service';
+import {FilmControllerService, FilmDto} from '../../../../api';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 
 @Injectable({
   providedIn: 'root'

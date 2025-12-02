@@ -6,11 +6,11 @@ import {
   FilmDto,
   FilmDubbingControllerService, FilmEpisodeControllerService,
   UpsertFilmDto
-} from '../../../../api';
+} from '../../../api';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
-import {NotifyService} from '../../../../core/notify/services/notify.service';
+import {NotifyService} from '../../../core/notify/services/notify.service';
 import {catchError, finalize, forkJoin, map, of, switchMap, tap} from 'rxjs';
-import {AuthService} from '../../../../core/auth/services/auth.service';
+import {AuthService} from '../../../core/auth/services/auth.service';
 
 type FilmState = {
   _film: FilmDto | undefined;

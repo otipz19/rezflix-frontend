@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
-import {DialogService} from '../../../../../core/dialog/services/dialog.service';
+import {DialogService} from '../../../../core/dialog/services/dialog.service';
 import {EditFilmInfoFormComponent} from '../components/edit-film-info-form/edit-film-info-form.component';
-import {FilmControllerService, FilmDto, UpsertFilmDto} from '../../../../../api';
-import {NotifyService} from '../../../../../core/notify/services/notify.service';
+import {FilmControllerService, FilmDto, UpsertFilmDto} from '../../../../api';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 
 @Injectable({
   providedIn: 'root'
