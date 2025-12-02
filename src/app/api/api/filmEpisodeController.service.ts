@@ -114,7 +114,7 @@ export class FilmEpisodeControllerService extends BaseService {
         return this.httpClient.request<string>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: createEpisodeRequest,
+                body: createEpisodeRequest.file,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
