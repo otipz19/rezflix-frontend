@@ -47,19 +47,42 @@
 
 <div class="mt-16">
   @if (dubbingList().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
-    <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Dubbings</p>
+    <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Dubbing</p>
   }
 
-  <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+  <div class="flex items-center gap-1 sm:gap-2 gap-y-2 flex-wrap">
     @for (dubbing of dubbingList(); track dubbing.id) {
-      <button z-button
-              [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
-              (click)="onSetActiveDubbing(dubbing.id)">
-        {{ dubbing.name }}
-      </button>
+      @if (auth.role() == UserRoleDto.CONTENT_MANAGER) {
+        <button z-button
+                [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
+                (click)="onSetActiveDubbing(dubbing.id)"
+                z-dropdown
+                [zDropdownMenu]="menu"
+                zTrigger="contextmenu"
+                zDirection="right"
+        >
+          {{ dubbing.name }}
+        </button>
+        <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+          <z-dropdown-menu-item>
+            Edit
+          </z-dropdown-menu-item>
+          <z-divider zSpacing="sm" class="-mx-1"/>
+          <z-dropdown-menu-item>
+            Delete
+          </z-dropdown-menu-item>
+        </z-dropdown-menu-content>
+      } @else {
+        <button z-button
+                [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
+                (click)="onSetActiveDubbing(dubbing.id)"
+        >
+          {{ dubbing.name }}
+        </button>
+      }
     }
     @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
-      <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
+      <button z-button zType="default" (click)="onAddNewDubbing()">Add new Dubbing</button>
     } @else if (dubbingList().length === 0) {
       <p class="text-3xl w-full text-center p-16">No content yet...</p>
     }
@@ -81,16 +104,39 @@
           <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Episodes</p>
         }
 
-        <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+        <div class="flex items-center gap-1 sm:gap-2 gap-y-2 flex-wrap">
           @for (episode of activeEpisodes(); track episode.id) {
-            <button z-button
-                    [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
-                    (click)="onSetActiveEpisode(episode.id)">
-              {{ episode.title }}
-            </button>
+            @if (auth.role() == UserRoleDto.CONTENT_MANAGER) {
+              <button z-button
+                      [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                      (click)="onSetActiveEpisode(episode.id)"
+                      z-dropdown
+                      [zDropdownMenu]="menu"
+                      zTrigger="contextmenu"
+                      zDirection="right"
+              >
+                {{ episode.title }}
+              </button>
+              <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+                <z-dropdown-menu-item>
+                  Edit
+                </z-dropdown-menu-item>
+                <z-divider zSpacing="sm" class="-mx-1"/>
+                <z-dropdown-menu-item>
+                  Delete
+                </z-dropdown-menu-item>
+              </z-dropdown-menu-content>
+            } @else {
+              <button z-button
+                      [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                      (click)="onSetActiveEpisode(episode.id)"
+              >
+                {{ episode.title }}
+              </button>
+            }
           }
           @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
-            <button z-button zType="default" (click)="onAddNewEpisode()">Add new episode</button>
+            <button z-button zType="default" (click)="onAddNewEpisode()">Add new Episode</button>
           } @else if (activeEpisodes().length === 0) {
             <p class="text-3xl w-full text-center p-16">No episodes yet...</p>
           }

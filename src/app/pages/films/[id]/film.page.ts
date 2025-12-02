@@ -11,6 +11,10 @@ import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
 import {UpsertEpisodeService} from './services/upsert-episode.service';
 import {AuthService} from '../../../core/auth/services/auth.service';
+import {ZardDividerComponent} from '@shared/zardui/components/divider/divider.component';
+import {ZardDropdownDirective} from '@shared/zardui/components/dropdown/dropdown-trigger.directive';
+import {ZardDropdownMenuContentComponent} from '@shared/zardui/components/dropdown/dropdown-menu-content.component';
+import {ZardDropdownMenuItemComponent} from '@shared/zardui/components/dropdown/dropdown-item.component';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -19,6 +23,10 @@ import {AuthService} from '../../../core/auth/services/auth.service';
   imports: [
     ZardButtonComponent,
     ZardIconComponent,
+    ZardDividerComponent,
+    ZardDropdownDirective,
+    ZardDropdownMenuContentComponent,
+    ZardDropdownMenuItemComponent,
   ],
   providers: [FilmStore]
 })
