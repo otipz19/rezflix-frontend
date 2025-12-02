@@ -1,0 +1,6 @@
+<select class="w-full outline-hidden" [(ngModel)]="selected">
+    <option value="">All</option>
+    <option [value]="UserTypeDto.MODERATOR">Moderators</option>
+    <option [value]="UserTypeDto.CONTENT_MANAGER">Content Managers</option>
+    <option [value]="UserTypeDto.VIEWER">Viewers</option>
+</select>
