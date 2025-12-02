@@ -29,12 +29,22 @@
 
   <div class="flex flex-col gap-5">
     <div>
-      <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Rating</p>
-      <div class="mt-2 flex flex-row items-center gap-1">
-        <img src="/star.svg" alt="Star icon" class="size-6 object-contain"/>
+      <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Average rating</p>
+      <div class="mt-2 flex flex-row items-center gap-2 sm:gap-4">
+        <app-star-rating-bar [rating]="film().totalRating" [disableHovering]="true"/>
         <p class="font-bold text-base">{{ film().totalRating }}</p>
       </div>
     </div>
+
+    @if (auth.role() === UserRoleDto.VIEWER) {
+      <div>
+        <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Your rating</p>
+        <div class="mt-2 flex flex-row items-center gap-2 sm:gap-4">
+          <app-star-rating-bar [rating]="userRating()" (changeRating)="onSetUserRating($event)"/>
+          <p class="font-bold text-base">{{ userRating() }}</p>
+        </div>
+      </div>
+    }
   </div>
 </div>
 

@@ -125,6 +125,14 @@ export class FilmStore {
     this._film.set(film);
   }
 
+  reloadFilm(): void {
+    this.filmApi.getFilm(this.film().id)
+      .pipe(
+        this.notify.notifyHttpError()
+      )
+      .subscribe(film => this._film.set(film));
+  }
+
   updateFilm(updatedDto: UpsertFilmDto): void {
     const oldVal = this.film();
     this._film.set({...oldVal, ...updatedDto});

@@ -17,6 +17,9 @@ import {ZardDropdownMenuContentComponent} from '@shared/zardui/components/dropdo
 import {ZardDropdownMenuItemComponent} from '@shared/zardui/components/dropdown/dropdown-item.component';
 import {DeleteDubbingService} from './services/delete-dubbing.service';
 import {DeleteEpisodeService} from './services/delete-episode.service';
+import {StarRatingBarComponent} from './components/star-rating-bar/star-rating-bar.component';
+import {FilmUserRatingStore} from './film-user-rating.store';
+import {FilmUserRatingService} from './services/film-user-rating.service';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -29,12 +32,14 @@ import {DeleteEpisodeService} from './services/delete-episode.service';
     ZardDropdownDirective,
     ZardDropdownMenuContentComponent,
     ZardDropdownMenuItemComponent,
+    StarRatingBarComponent,
   ],
-  providers: [FilmStore]
+  providers: [FilmStore, FilmUserRatingStore]
 })
 export class FilmPage {
   private readonly store = inject(FilmStore);
-  private readonly router = inject(Router);
+  private readonly router = inject(Router)
+
   protected readonly auth = inject(AuthService);
 
   private readonly editFilmInfoService = inject(EditFilmInfoService);
@@ -43,6 +48,9 @@ export class FilmPage {
   private readonly upsertEpisodeService = inject(UpsertEpisodeService);
   private readonly deleteDubbingService = inject(DeleteDubbingService);
   private readonly deleteEpisodeService = inject(DeleteEpisodeService);
+
+  private readonly ratingStore = inject(FilmUserRatingStore);
+  private readonly ratingService = inject(FilmUserRatingService);
 
   protected readonly film: Signal<FilmDto> = this.store.film;
   protected readonly dubbingList: Signal<DubbingDto[]> = this.store.dubbingList;
@@ -56,9 +64,13 @@ export class FilmPage {
   protected readonly activeEpisodeLink: Signal<string | undefined> = this.store.activeEpisodeLink;
   protected readonly activeEpisodeMessage: Signal<string> = this.store.activeEpisodeMessage;
 
+  protected readonly userRating: Signal<number> = this.ratingStore.userRating;
+
   constructor() {
-    this.store.useFilm(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));
+    const film = getFromRoute<FilmDto>(RESOLVE_FILM_KEY);
+    this.store.useFilm(film);
     this.store.loadDubbingListWithEpisodes();
+    this.ratingStore.loadUserRating(film.id);
   }
 
   protected onEditFilmInfo() {
@@ -112,6 +124,14 @@ export class FilmPage {
 
   protected onSetActiveEpisode(episodeId: EpisodeDto['id']) {
     this.store.setActiveEpisode(episodeId);
+  }
+
+  protected onSetUserRating(rating: number) {
+    this.ratingService.setUserRating$(this.film().id, rating)
+      .subscribe(() => {
+        this.ratingStore.loadUserRating(this.film().id, rating);
+        this.store.reloadFilm();
+      });
   }
 
   protected readonly UserRoleDto = UserRoleDto;
