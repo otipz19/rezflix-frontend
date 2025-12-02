@@ -1,11 +1,17 @@
-<div class="block rounded-lg border bg-card text-card-foreground shadow-sm w-full">
+<div class="group block w-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:border-[#D6C7FF] hover:shadow-lg hover:-translate-y-1 cursor-pointer active:scale-[0.98]">
 
   <div class="w-full aspect-[4/3] overflow-hidden rounded-t-lg">
-    <img src="/no-film-poster.png" alt="Film poster" class="w-full h-full object-cover"/>
+    <img
+      src="/no-film-poster.png"
+      alt="Film poster"
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
   </div>
 
   <div class="my-4 px-6">
-    <h3 class="font-bold text-base line-clamp-1">{{ film().title }}</h3>
+    <h3 class="font-bold text-base line-clamp-1 transition-colors group-hover:text-[#AB8BFF]">
+      {{ film().title }}
+    </h3>
 
     <div class="mt-2 flex flex-row items-center gap-4 pb-2">
       <app-star-rating-bar sizeCs="size-4" [disableHovering]="true" [rating]="film().totalRating"/>
