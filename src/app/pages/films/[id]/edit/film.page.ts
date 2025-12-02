@@ -9,11 +9,11 @@ import {DeleteFilmService} from './services/delete-film.service';
 import {Router} from '@angular/router';
 import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
-import {UpsertEpisodeService} from './dubbing/[id]/services/upsert-episode.service';
+import {UpsertEpisodeService} from './services/upsert-episode.service';
 
 @Component({
   selector: 'app-film-edit-page',
-  templateUrl: './film-edit.page.html',
+  templateUrl: './film.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ZardButtonComponent,
@@ -21,7 +21,7 @@ import {UpsertEpisodeService} from './dubbing/[id]/services/upsert-episode.servi
   ],
   providers: [FilmStore]
 })
-export class FilmEditPage {
+export class FilmPage {
   private readonly store = inject(FilmStore);
   private readonly router = inject(Router);
 
