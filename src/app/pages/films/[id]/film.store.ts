@@ -1,211 +1,202 @@
-import {computed, inject} from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   DubbingDto,
-  EpisodeDto, EpisodeStatusDto,
+  EpisodeDto,
+  EpisodeStatusDto,
   FilmControllerService,
   FilmDto,
-  FilmDubbingControllerService, FilmEpisodeControllerService,
+  FilmDubbingControllerService,
+  FilmEpisodeControllerService,
   UpsertFilmDto
 } from '../../../api';
-import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
-import {NotifyService} from '../../../core/notify/services/notify.service';
-import {catchError, finalize, forkJoin, map, of, switchMap, tap} from 'rxjs';
-import {AuthService} from '../../../core/auth/services/auth.service';
+import { NotifyService } from '../../../core/notify/services/notify.service';
+import { catchError, finalize, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
-type FilmState = {
-  _film: FilmDto | undefined;
-  isLoading: boolean;
-  dubbingList: DubbingDto[];
-  dubbingMap: Map<DubbingDto['id'], EpisodeDto[]>;
-  activeDubbingId: DubbingDto['id'] | undefined;
-  activeEpisodeId: EpisodeDto['id'] | undefined;
-};
+@Injectable()
+export class FilmStore {
+  private readonly filmApi = inject(FilmControllerService);
+  private readonly dubbingApi = inject(FilmDubbingControllerService);
+  private readonly episodeApi = inject(FilmEpisodeControllerService);
+  private readonly auth = inject(AuthService);
+  private readonly notify = inject(NotifyService);
 
-export const FilmStore = signalStore(
-  withState<FilmState>({
-    _film: undefined,
-    isLoading: false,
-    dubbingList: [],
-    dubbingMap: new Map(),
-    activeDubbingId: undefined,
-    activeEpisodeId: undefined
-  }),
+  private readonly _film = signal<FilmDto | undefined>(undefined);
+  readonly film = computed(() => {
+    const film = this._film();
+    if (film == undefined) {
+      throw new Error("FilmStore: film is undefined");
+    }
+    return film;
+  });
 
-  withComputed((store) => ({
-    film: computed(() => {
-      const film = store._film();
-      if (film == undefined) {
-        throw new Error("FilmStore: film is undefined");
-      }
-      return film;
-    }),
+  private readonly _isLoading = signal(false);
+  readonly isLoading = this._isLoading.asReadonly();
 
-    activeEpisodes: computed(() => {
-      const activeDubId = store.activeDubbingId();
-      if (!activeDubId) {
-        return [];
-      }
+  private readonly _dubbingList = signal<DubbingDto[]>([]);
+  readonly dubbingList = this._dubbingList.asReadonly();
 
-      const arr = store.dubbingMap().get(activeDubId);
-      if (!arr) {
-        return [];
-      }
-      const episodes = [...arr];
-      episodes.sort((a, b) => a.watchOrder - b.watchOrder);
-      return episodes;
-    })
-  })),
+  private readonly _dubbingMap = signal<Map<DubbingDto['id'], EpisodeDto[]>>(new Map());
+  readonly dubbingMap = this._dubbingMap.asReadonly();
 
-  withComputed((store) => ({
-    lastWatchOrder: computed(() => {
-      const eps = store.activeEpisodes();
-      return eps.length === 0 ? -1 : eps[eps.length - 1].watchOrder;
-    }),
+  private readonly _activeDubbingId = signal<DubbingDto['id'] | undefined>(undefined);
+  readonly activeDubbingId = this._activeDubbingId.asReadonly();
 
-    activeEpisode: computed(() => {
-      const eps = store.activeEpisodes();
-      return eps.length === 0 ? undefined : eps.find(e => e.id === store.activeEpisodeId());
-    }),
-  })),
+  private readonly _activeEpisodeId = signal<EpisodeDto['id'] | undefined>(undefined);
+  readonly activeEpisodeId = this._activeEpisodeId.asReadonly();
 
-  withComputed((store) => ({
-    activeEpisodeLink: computed(() => {
-      const activeEp = store.activeEpisode();
-      if(activeEp && activeEp.hlsLink) {
-        return 'http://localhost:8080' + activeEp.hlsLink;
-      }
-      return undefined;
-    }),
+  readonly activeEpisodes = computed(() => {
+    const activeDubId = this.activeDubbingId();
+    if (!activeDubId) {
+      return [];
+    }
 
-    activeEpisodeMessage: computed(() => {
-      const ep = store.activeEpisode();
+    const arr = this.dubbingMap().get(activeDubId);
+    if (!arr) {
+      return [];
+    }
+    const episodes = [...arr];
+    episodes.sort((a, b) => a.watchOrder - b.watchOrder);
+    return episodes;
+  });
 
-      if (!ep) {
-        return '';
-      }
+  readonly lastWatchOrder = computed(() => {
+    const eps = this.activeEpisodes();
+    return eps.length === 0 ? -1 : eps[eps.length - 1].watchOrder;
+  });
 
-      switch (ep.status) {
-        case EpisodeStatusDto.RENDERED:
-          return 'Episode is ready to be displayed';
-        case EpisodeStatusDto.BEING_RENDERED:
-          return 'Episode is being rendered';
-        case EpisodeStatusDto.RENDERING_FAILED:
-          return 'Episode has failed to render';
-      }
-    })
-  })),
+  readonly activeEpisode = computed(() => {
+    const eps = this.activeEpisodes();
+    return eps.length === 0 ? undefined : eps.find(e => e.id === this.activeEpisodeId());
+  });
 
-  withMethods(
-    (
-      store,
-      filmApi = inject(FilmControllerService),
-      dubbingApi = inject(FilmDubbingControllerService),
-      episodeApi = inject(FilmEpisodeControllerService),
-      auth = inject(AuthService),
-      notify = inject(NotifyService)
-    ) => ({
-      useFilm(film: FilmDto): void {
-        patchState(store, {_film: film});
-      },
+  readonly activeEpisodeLink = computed(() => {
+    const activeEp = this.activeEpisode();
+    if (activeEp && activeEp.hlsLink) {
+      return 'http://localhost:8080' + activeEp.hlsLink;
+    }
+    return undefined;
+  });
 
-      updateFilm(updatedDto: UpsertFilmDto): void {
-        const oldVal = store.film();
-        patchState(store, {_film: {...oldVal, ...updatedDto}});
+  readonly activeEpisodeMessage = computed(() => {
+    const ep = this.activeEpisode();
 
-        filmApi.getFilm(store.film().id)
-          .pipe(
-            tap({
-              error: () => patchState(store, {_film: oldVal})
-            }),
-            notify.notifyHttpError()
-          )
-          .subscribe(film => patchState(store, {_film: film}));
-      },
+    if (!ep) {
+      return '';
+    }
 
-      setActiveDubbing(dubbingId: DubbingDto['id']): void {
-        const dubMap = store.dubbingMap();
-        const eps = dubMap.get(dubbingId);
-        if (!eps) {
-          throw new Error('Not existing dubbing');
-        }
-        const activeEpisodeId = eps.length === 0 ? undefined : eps[0].id;
-        patchState(store, {activeDubbingId: dubbingId, activeEpisodeId});
-      },
+    switch (ep.status) {
+      case EpisodeStatusDto.RENDERED:
+        return 'Episode is ready to be displayed';
+      case EpisodeStatusDto.BEING_RENDERED:
+        return 'Episode is being rendered';
+      case EpisodeStatusDto.RENDERING_FAILED:
+        return 'Episode has failed to render';
+    }
+  });
 
-      setActiveEpisode(episodeId: EpisodeDto['id']): void {
-        const eps = store.activeEpisodes();
-        const activeEp = eps.find(ep => ep.id === episodeId);
-        if(!activeEp) {
-          throw new Error('Not active episode');
-        }
-        patchState(store, {activeEpisodeId: activeEp.id});
-      },
+  useFilm(film: FilmDto): void {
+    this._film.set(film);
+  }
 
-      loadDubbingListWithEpisodes(): void {
-        patchState(store, {
-          isLoading: true,
-          dubbingList: [],
-          dubbingMap: new Map(),
-          activeDubbingId: undefined,
-          activeEpisodeId: undefined
-        });
+  updateFilm(updatedDto: UpsertFilmDto): void {
+    const oldVal = this.film();
+    this._film.set({ ...oldVal, ...updatedDto });
 
-        // TODO: find better way to load all items without pagination
-        dubbingApi.getDubbingsByCriteria({filmId: store.film().id, size: 1000})
-          .pipe(
-            map(dubbingList => dubbingList.items),
-            tap(dubbings => {
-              patchState(store, {dubbingList: dubbings})
-            }),
-            switchMap(dubbings => {
-              if (!dubbings.length) {
-                return of([]);
-              }
+    this.filmApi.getFilm(this.film().id)
+      .pipe(
+        tap({
+          error: () => this._film.set(oldVal)
+        }),
+        this.notify.notifyHttpError()
+      )
+      .subscribe(film => this._film.set(film));
+  }
 
-              return forkJoin(dubbings.map(dubbing =>
-                forkJoin([of(dubbing.id), episodeApi.getEpisodesByCriteria(dubbing.id, {size: 1000})
-                  .pipe(
-                    map(({items}) => items)
-                  )
-                ])
-              ));
-            }),
-            tap(dubbingMapEntries => {
-              dubbingMapEntries.forEach(([dubbingId, episodes]) => {
-                const dubbingMap = store.dubbingMap();
-                dubbingMap.set(dubbingId, episodes);
-                patchState(store, {dubbingMap});
-              });
-            }),
-            tap(dubbingMapEntries => {
-              if (!dubbingMapEntries.length) {
-                patchState(store, {activeDubbingId: undefined, activeEpisodeId: undefined});
-                return;
-              }
+  setActiveDubbing(dubbingId: DubbingDto['id']): void {
+    const dubMap = this.dubbingMap();
+    const eps = dubMap.get(dubbingId);
+    if (!eps) {
+      throw new Error('Not existing dubbing');
+    }
+    const activeEpisodeId = eps.length === 0 ? undefined : eps[0].id;
+    this._activeDubbingId.set(dubbingId);
+    this._activeEpisodeId.set(activeEpisodeId);
+  }
 
-              const nonEmptyDubbing = dubbingMapEntries
-                .find(([, episodes]) => episodes.length > 0);
+  setActiveEpisode(episodeId: EpisodeDto['id']): void {
+    const eps = this.activeEpisodes();
+    const activeEp = eps.find(ep => ep.id === episodeId);
+    if (!activeEp) {
+      throw new Error('Not active episode');
+    }
+    this._activeEpisodeId.set(activeEp.id);
+  }
 
-              if (!nonEmptyDubbing) {
-                patchState(store, {activeDubbingId: dubbingMapEntries[0][0], activeEpisodeId: undefined});
-              } else {
-                const [activeDubbingId, [{id: activeEpisodeId}]] = nonEmptyDubbing;
-                patchState(store, {activeDubbingId, activeEpisodeId});
-              }
-            }),
-            catchError(err => {
-              patchState(store, {
-                dubbingList: [],
-                dubbingMap: new Map(),
-                activeDubbingId: undefined,
-                activeEpisodeId: undefined
-              });
-              return err;
-            }),
-            finalize(() => patchState(store, {isLoading: false})),
-            notify.notifyHttpError()
-          )
-          .subscribe();
-      }
-    })),
-);
+  loadDubbingListWithEpisodes(): void {
+    this._isLoading.set(true);
+    this._dubbingList.set([]);
+    this._dubbingMap.set(new Map());
+    this._activeDubbingId.set(undefined);
+    this._activeEpisodeId.set(undefined);
+
+    this.dubbingApi.getDubbingsByCriteria({ filmId: this.film().id, size: 1000 })
+      .pipe(
+        map(dubbingList => dubbingList.items),
+        tap(dubbings => {
+          this._dubbingList.set(dubbings);
+        }),
+        switchMap(dubbings => {
+          if (!dubbings.length) {
+            return of([]);
+          }
+
+          return forkJoin(dubbings.map(dubbing =>
+            forkJoin([of(dubbing.id), this.episodeApi.getEpisodesByCriteria(dubbing.id, { size: 1000 })
+              .pipe(
+                map(({ items }) => items)
+              )
+            ])
+          ));
+        }),
+        tap(dubbingMapEntries => {
+          dubbingMapEntries.forEach(([dubbingId, episodes]) => {
+            this._dubbingMap.update(currentMap => {
+              const newMap = new Map(currentMap);
+              newMap.set(dubbingId, episodes);
+              return newMap;
+            });
+          });
+        }),
+        tap(dubbingMapEntries => {
+          if (!dubbingMapEntries.length) {
+            this._activeDubbingId.set(undefined);
+            this._activeEpisodeId.set(undefined);
+            return;
+          }
+
+          const nonEmptyDubbing = dubbingMapEntries
+            .find(([, episodes]) => episodes.length > 0);
+
+          if (!nonEmptyDubbing) {
+            this._activeDubbingId.set(dubbingMapEntries[0][0]);
+            this._activeEpisodeId.set(undefined);
+          } else {
+            const [activeDubbingId, [{ id: activeEpisodeId }]] = nonEmptyDubbing;
+            this._activeDubbingId.set(activeDubbingId);
+            this._activeEpisodeId.set(activeEpisodeId);
+          }
+        }),
+        catchError(err => {
+          this._dubbingList.set([]);
+          this._dubbingMap.set(new Map());
+          this._activeDubbingId.set(undefined);
+          this._activeEpisodeId.set(undefined);
+          return err;
+        }),
+        finalize(() => this._isLoading.set(false)),
+        this.notify.notifyHttpError()
+      )
+      .subscribe();
+  }
+}
