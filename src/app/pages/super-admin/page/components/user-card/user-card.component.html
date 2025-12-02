@@ -4,5 +4,11 @@
       <h3 class="font-bold text-base">{{ user().username }}</h3>
       <p class="text-sm text-base mt-1">{{ typeLabel(user().type) }}</p>
     </div>
+
+    <div class="ml-4">
+      <button z-button zType="ghost" (click)="onDelete()" aria-label="Delete user">
+        <z-icon zType="trash"></z-icon>
+      </button>
+    </div>
   </div>
 </div>
