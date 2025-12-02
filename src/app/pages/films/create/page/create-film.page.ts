@@ -47,9 +47,8 @@ export class CreateFilmPage {
         finalize(() => this.requestInProgress.set(false)),
         this.notify.notifyHttpRequest('Successfully created new movie!')
       )
-      .subscribe(() => {
-        // TODO: change navigation to the created film editing page
-        this.router.navigate(['/']);
+      .subscribe(id => {
+        this.router.navigate(['/', 'films', id]);
       });
   }
 }
