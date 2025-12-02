@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, input, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, inject, computed} from '@angular/core';
 import {UserDto, UserTypeDto, UserControllerService} from '../../../../../api';
 import {DialogService} from '../../../../../core/dialog/services/dialog.service';
 import {NotifyService} from '../../../../../core/notify/services/notify.service';
@@ -22,8 +22,8 @@ export class UserCardComponent {
   private readonly notify = inject(NotifyService);
   private readonly dispatch = injectDispatch(superAdminPageEvents);
 
-  protected typeLabel(type?: UserTypeDto) {
-    switch (type) {
+  protected readonly typeLabel = computed(() => {
+    switch (this.user().type) {
       case UserTypeDto.CONTENT_MANAGER:
         return 'Content manager';
       case UserTypeDto.VIEWER:
@@ -33,7 +33,7 @@ export class UserCardComponent {
       default:
         return '';
     }
-  }
+  });
 
   protected onDelete() {
     this.dialogService.confirm$({
