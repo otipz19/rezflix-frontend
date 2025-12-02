@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import {computed, inject, Injectable, linkedSignal, signal} from '@angular/core';
 import {
   DubbingDto,
   EpisodeDto,
@@ -9,9 +9,9 @@ import {
   FilmEpisodeControllerService,
   UpsertFilmDto
 } from '../../../api';
-import { NotifyService } from '../../../core/notify/services/notify.service';
-import { catchError, finalize, forkJoin, map, of, switchMap, tap } from 'rxjs';
-import { AuthService } from '../../../core/auth/services/auth.service';
+import {NotifyService} from '../../../core/notify/services/notify.service';
+import {catchError, finalize, forkJoin, map, of, switchMap, tap} from 'rxjs';
+import {AuthService} from '../../../core/auth/services/auth.service';
 
 @Injectable()
 export class FilmStore {
@@ -39,11 +39,23 @@ export class FilmStore {
   private readonly _dubbingMap = signal<Map<DubbingDto['id'], EpisodeDto[]>>(new Map());
   readonly dubbingMap = this._dubbingMap.asReadonly();
 
-  private readonly _activeDubbingId = signal<DubbingDto['id'] | undefined>(undefined);
-  readonly activeDubbingId = this._activeDubbingId.asReadonly();
+  private readonly _activeDubbingId = linkedSignal<{
+    dMap: Map<DubbingDto['id'], EpisodeDto[]>,
+    dList: DubbingDto[]
+  }, DubbingDto['id'] | undefined>({
+    source: () => ({
+      dMap: this.dubbingMap(),
+      dList: this.dubbingList()
+    }),
+    computation: (newSource, previous) => {
+      if (previous?.value && newSource.dMap.get(previous.value)) {
+        return previous.value;
+      }
+      return newSource.dList[0]?.id;
+    }
+  });
 
-  private readonly _activeEpisodeId = signal<EpisodeDto['id'] | undefined>(undefined);
-  readonly activeEpisodeId = this._activeEpisodeId.asReadonly();
+  readonly activeDubbingId = this._activeDubbingId.asReadonly();
 
   readonly activeEpisodes = computed(() => {
     const activeDubId = this.activeDubbingId();
@@ -60,14 +72,24 @@ export class FilmStore {
     return episodes;
   });
 
+  private readonly _activeEpisode = linkedSignal<EpisodeDto[], EpisodeDto | undefined>({
+    source: this.activeEpisodes,
+    computation: (newSource, previous) => {
+      const prevEp = previous?.value && newSource.find(e => e.id === previous?.value?.id);
+      if (prevEp) {
+        return prevEp;
+      }
+      return newSource[0];
+    }
+  });
+
+  readonly activeEpisode = this._activeEpisode.asReadonly();
+
+  readonly activeEpisodeId = computed(() => this.activeEpisode()?.id);
+
   readonly lastWatchOrder = computed(() => {
     const eps = this.activeEpisodes();
     return eps.length === 0 ? -1 : eps[eps.length - 1].watchOrder;
-  });
-
-  readonly activeEpisode = computed(() => {
-    const eps = this.activeEpisodes();
-    return eps.length === 0 ? undefined : eps.find(e => e.id === this.activeEpisodeId());
   });
 
   readonly activeEpisodeLink = computed(() => {
@@ -101,7 +123,7 @@ export class FilmStore {
 
   updateFilm(updatedDto: UpsertFilmDto): void {
     const oldVal = this.film();
-    this._film.set({ ...oldVal, ...updatedDto });
+    this._film.set({...oldVal, ...updatedDto});
 
     this.filmApi.getFilm(this.film().id)
       .pipe(
@@ -115,22 +137,19 @@ export class FilmStore {
 
   setActiveDubbing(dubbingId: DubbingDto['id']): void {
     const dubMap = this.dubbingMap();
-    const eps = dubMap.get(dubbingId);
-    if (!eps) {
+    if (!dubMap.has(dubbingId)) {
       throw new Error('Not existing dubbing');
     }
-    const activeEpisodeId = eps.length === 0 ? undefined : eps[0].id;
     this._activeDubbingId.set(dubbingId);
-    this._activeEpisodeId.set(activeEpisodeId);
   }
 
   setActiveEpisode(episodeId: EpisodeDto['id']): void {
     const eps = this.activeEpisodes();
     const activeEp = eps.find(ep => ep.id === episodeId);
     if (!activeEp) {
-      throw new Error('Not active episode');
+      throw new Error('Not amongst active episodes');
     }
-    this._activeEpisodeId.set(activeEp.id);
+    this._activeEpisode.set(activeEp);
   }
 
   loadDubbingListWithEpisodes(): void {
@@ -138,9 +157,8 @@ export class FilmStore {
     this._dubbingList.set([]);
     this._dubbingMap.set(new Map());
     this._activeDubbingId.set(undefined);
-    this._activeEpisodeId.set(undefined);
 
-    this.dubbingApi.getDubbingsByCriteria({ filmId: this.film().id, size: 1000 })
+    this.dubbingApi.getDubbingsByCriteria({filmId: this.film().id, size: 1000})
       .pipe(
         map(dubbingList => dubbingList.items),
         tap(dubbings => {
@@ -152,9 +170,9 @@ export class FilmStore {
           }
 
           return forkJoin(dubbings.map(dubbing =>
-            forkJoin([of(dubbing.id), this.episodeApi.getEpisodesByCriteria(dubbing.id, { size: 1000 })
+            forkJoin([of(dubbing.id), this.episodeApi.getEpisodesByCriteria(dubbing.id, {size: 1000})
               .pipe(
-                map(({ items }) => items)
+                map(({items}) => items)
               )
             ])
           ));
@@ -168,30 +186,10 @@ export class FilmStore {
             });
           });
         }),
-        tap(dubbingMapEntries => {
-          if (!dubbingMapEntries.length) {
-            this._activeDubbingId.set(undefined);
-            this._activeEpisodeId.set(undefined);
-            return;
-          }
-
-          const nonEmptyDubbing = dubbingMapEntries
-            .find(([, episodes]) => episodes.length > 0);
-
-          if (!nonEmptyDubbing) {
-            this._activeDubbingId.set(dubbingMapEntries[0][0]);
-            this._activeEpisodeId.set(undefined);
-          } else {
-            const [activeDubbingId, [{ id: activeEpisodeId }]] = nonEmptyDubbing;
-            this._activeDubbingId.set(activeDubbingId);
-            this._activeEpisodeId.set(activeEpisodeId);
-          }
-        }),
         catchError(err => {
           this._dubbingList.set([]);
           this._dubbingMap.set(new Map());
           this._activeDubbingId.set(undefined);
-          this._activeEpisodeId.set(undefined);
           return err;
         }),
         finalize(() => this._isLoading.set(false)),
