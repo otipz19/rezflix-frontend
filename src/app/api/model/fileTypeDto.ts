@@ -9,13 +9,10 @@
  */
 
 
-export interface FilmCriteriaDto { 
-    page?: number;
-    size?: number;
-    orderBy?: string;
-    isDescendingOrder?: boolean;
-    query?: string;
-    ratedByUser?: number;
-    notRatedByUser?: number;
+export enum FileTypeDto {
+
+    USER_AVATAR = 'USER_AVATAR',
+
+    FILM_POSTER = 'FILM_POSTER'
 }
 

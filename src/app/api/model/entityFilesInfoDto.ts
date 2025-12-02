@@ -9,13 +9,8 @@
  */
 
 
-export interface FilmCriteriaDto { 
-    page?: number;
-    size?: number;
-    orderBy?: string;
-    isDescendingOrder?: boolean;
-    query?: string;
-    ratedByUser?: number;
-    notRatedByUser?: number;
+export interface EntityFilesInfoDto { 
+    entityId: number;
+    filesIds: Array<string>;
 }
 
