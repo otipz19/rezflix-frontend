@@ -42,9 +42,6 @@ export class SuperAdminPage implements OnInit {
   protected readonly pageSize: Signal<number> = this.store.pageSize;
   protected readonly total: Signal<number> = this.store.total;
 
-  protected readonly searchQuery: Signal<string> = this.store.searchQuery;
-  protected readonly selectedType: Signal<UserTypeDto | null> = this.store.selectedType;
-
   protected readonly UserTypeDto = UserTypeDto;
 
   constructor() {
