@@ -3,7 +3,7 @@ import {CommentDto, FilmDto, UserRoleDto} from '../../../../../api';
 import {CommentsStore} from '../../comments.store';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {AuthService} from '../../../../../core/auth/services/auth.service';
-import {StarRatingBarComponent} from '../star-rating-bar/star-rating-bar.component';
+import {StarRatingBarComponent} from '@shared/components/star-rating-bar/star-rating-bar.component';
 
 @Component({
   selector: 'app-comments-section',

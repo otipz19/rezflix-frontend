@@ -17,7 +17,7 @@ import {ZardDropdownMenuContentComponent} from '@shared/zardui/components/dropdo
 import {ZardDropdownMenuItemComponent} from '@shared/zardui/components/dropdown/dropdown-item.component';
 import {DeleteDubbingService} from './services/delete-dubbing.service';
 import {DeleteEpisodeService} from './services/delete-episode.service';
-import {StarRatingBarComponent} from './components/star-rating-bar/star-rating-bar.component';
+import {StarRatingBarComponent} from '@shared/components/star-rating-bar/star-rating-bar.component';
 import {FilmUserRatingStore} from './film-user-rating.store';
 import {FilmUserRatingService} from './services/film-user-rating.service';
 import {CommentsSectionComponent} from './components/comments-section/comments-section.component';
