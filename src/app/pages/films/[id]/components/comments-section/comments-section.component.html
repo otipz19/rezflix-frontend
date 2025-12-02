@@ -4,20 +4,31 @@
   <app-comment-form [filmId]="filmId()" (createdComment)="onCommentCreated()"/>
 }
 
-<div class="mt-8 sm:mt-10 flex flex-col gap-4 sm:gap-6">
-  @for (comment of comments(); track comment.id) {
-    <div class="bg-card rounded-md pt-4 pb-6 sm:pb-8 px-6 sm:px-8">
-      <div class="w-full flex justify-between items-center gap-1 mb-4">
-        <p class="text-xl text-muted-foreground">{{comment.author.username}}</p>
+@if (comments().length > 0) {
+  <div class="mt-8 sm:mt-10 flex flex-col gap-4 sm:gap-6">
+    @for (comment of comments(); track comment.id) {
+      <div class="bg-card rounded-md pt-4 pb-6 sm:pb-8 px-6 sm:px-8">
+        <div class="w-full flex justify-between items-center gap-1 mb-4">
+          <p class="text-xl text-muted-foreground">{{ comment.author.username }}</p>
 
-        @if (comment.authorRating) {
-          <app-star-rating-bar [disableHovering]="true" [rating]="comment.authorRating.rating" sizeCs="size-4"/>
-        }
+          @if (comment.authorRating) {
+            <app-star-rating-bar [disableHovering]="true" [rating]="comment.authorRating.rating" sizeCs="size-4"/>
+          }
+        </div>
+
+        <p class="text-md">{{ comment.text }}</p>
       </div>
+    }
+  </div>
 
-      <p class="text-md">{{comment.text}}</p>
-    </div>
-  } @empty {
-    <p class="text-2xl w-full text-center p-8">No comments yet...</p>
-  }
-</div>
+  <div class="mt-8 w-full flex justify-center items-center">
+    <app-paginator
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [totalItems]="total()"
+      (paginationChanged)="onPageChanged($event)"
+    />
+  </div>
+} @else {
+  <p class="text-2xl w-full text-center p-8">No comments yet...</p>
+}
