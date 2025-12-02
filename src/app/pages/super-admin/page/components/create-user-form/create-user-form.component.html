@@ -1,0 +1,23 @@
+<form>
+  <div class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Type</label>
+      <select class="w-full rounded px-3 py-2 bg-card text-card-foreground outline-hidden" [formControl]="form.controls.type!">
+        <option [ngValue]="UserTypeDto.VIEWER">Viewer</option>
+        <option [ngValue]="UserTypeDto.CONTENT_MANAGER">Content manager</option>
+        <option [ngValue]="UserTypeDto.MODERATOR">Moderator</option>
+      </select>
+    </div>
+
+    <app-form-input [control]="form.controls.username" label="Username" type="text" placeholder="haskell"></app-form-input>
+    <app-form-input [control]="form.controls.password" label="Password" type="password" placeholder="••••••••"></app-form-input>
+    <app-form-input [control]="form.controls.passwordConfirm" label="Confirm password" type="password" placeholder="••••••••"></app-form-input>
+    <app-form-input [control]="form.controls.about!" label="About" type="textarea" placeholder="Monad is..."></app-form-input>
+
+    @if (form.errors) {
+    <div class="mb-3">
+        <z-form-message zType="error">{{ form.errors | errorMessage }}</z-form-message>
+    </div>
+    }
+  </div>
+</form>

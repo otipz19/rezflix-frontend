@@ -8,6 +8,12 @@ import {PaginatorComponent} from '@shared/components/paginator/paginator.compone
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';
 import {SearchBarComponent} from './components/search-bar/search-bar.component';
 import {TypeSelectorComponent} from './components/type-selector/type-selector.component';
+import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
+import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
+import {DialogService} from '../../../core/dialog/services/dialog.service';
+import {UserControllerService, CreateUserDto} from '../../../api';
+import {NotifyService} from '../../../core/notify/services/notify.service';
+import {CreateUserFormComponent} from './components/create-user-form/create-user-form.component';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 
 @Component({
@@ -16,7 +22,9 @@ import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
     UserCardComponent,
     PaginatorComponent,
     SearchBarComponent,
-    TypeSelectorComponent
+    TypeSelectorComponent,
+    ZardButtonComponent,
+    ZardIconComponent,
   ],
   templateUrl: './super-admin.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +54,32 @@ export class SuperAdminPage implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(v => this.dispatch.searchQueryChanged(v));
+  }
+  private readonly dialogService = inject(DialogService);
+  private readonly api = inject(UserControllerService);
+  private readonly notify = inject(NotifyService);
+
+  protected openCreateUser() {
+    this.dialogService.upsert$({
+      zTitle: 'Create user',
+      zContent: CreateUserFormComponent,
+      zOkText: 'Create',
+      zWidth: '520px'
+    }, (value: any) => {
+      const dto: CreateUserDto = {
+        username: value.username,
+        password: value.password,
+        type: value.type,
+        about: value.about
+      };
+
+      return this.api.createUser(dto).pipe(
+        this.notify.notifyHttpRequest('User was created successfully!')
+      );
+    })
+    .subscribe(() => {
+        this.dispatch.opened();
+    });
   }
 
   ngOnInit() {
