@@ -16,6 +16,14 @@
         </a>
       }
 
+      @if (auth.hasRole(UserRoleDto.SUPER_ADMIN)) {
+        <a [routerLink]="['/', 'super-admin']" z-button zType="default"
+           class="flex flex-row justify-between items-center gap-2">
+          <z-icon zType="users" zSize="xl"></z-icon>
+          <span class="hidden sm:block">Manage users</span>
+        </a>
+      }
+
       <app-header-user-menu/>
     </div>
   </nav>

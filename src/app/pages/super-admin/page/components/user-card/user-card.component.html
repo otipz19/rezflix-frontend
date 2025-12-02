@@ -1,0 +1,14 @@
+<div class="block rounded-lg border bg-card text-card-foreground shadow-sm w-full p-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="font-bold text-base">{{ user().username }}</h3>
+      <p class="text-sm mt-1">{{ typeLabel() }}</p>
+    </div>
+
+    <div class="ml-4">
+      <button z-button zType="ghost" (click)="onDelete()" aria-label="Delete user">
+        <z-icon zType="trash"></z-icon>
+      </button>
+    </div>
+  </div>
+</div>

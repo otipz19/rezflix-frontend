@@ -20,6 +20,10 @@ export const routes: Routes = [
         children: FILMS_ROUTES
       },
       {
+        path: 'super-admin',
+        loadChildren: () => import('./pages/super-admin/routes').then(r => r.SUPER_ADMIN_ROUTES)
+      },
+      {
         path: 'auth',
         canActivate: [unauthenticatedRouteGuard],
         loadChildren: () => import('./pages/auth/routes').then(r => r.AUTH_ROUTES)

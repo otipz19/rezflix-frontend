@@ -10,6 +10,7 @@ import {RegistrationService} from '../../../../core/auth/services/registration.s
 import {FormInputComponent} from '@shared/forms/components/form-input/form-input.component';
 import {ErrorMessagePipe} from '@shared/forms/pipes/error-message.pipe';
 import {ZardFormMessageComponent} from '@shared/zardui/components/form/form.component';
+import {NotifyService} from '../../../../core/notify/services/notify.service';
 
 @Component({
   selector: 'app-login-page',
@@ -32,6 +33,7 @@ export class RegistrationPage {
   private readonly fb = inject(FormBuilder).nonNullable;
   private readonly router = inject(Router);
   protected readonly registrationService = inject(RegistrationService);
+  private readonly notify = inject(NotifyService);
 
   protected readonly form = this.fb.group({
     // TODO: check backend for length validation of username and password
@@ -48,7 +50,8 @@ export class RegistrationPage {
         switchMap(() => {
           const {username, password} = this.form.getRawValue();
           return this.registrationService.register$({username, password});
-        })
+        }),
+        this.notify.notifyHttpError()
       )
       .subscribe(() => {
         this.router.navigate(['/']);
