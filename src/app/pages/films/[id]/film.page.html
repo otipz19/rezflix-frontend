@@ -59,7 +59,7 @@
       @if (link) {
         <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
       } @else {
-        <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() || 'No active episode' }}</p>
+        <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() }}</p>
       }
     </div>
 

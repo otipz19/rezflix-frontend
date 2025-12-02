@@ -40,7 +40,7 @@ export class FilmPage {
   protected readonly activeEpisodes: Signal<EpisodeDto[]> = this.store.activeEpisodes;
 
   protected readonly activeEpisodeLink: Signal<string | undefined> = this.store.activeEpisodeLink;
-  protected readonly activeEpisodeMessage: Signal<string | undefined> = this.store.activeEpisodeMessage;
+  protected readonly activeEpisodeMessage: Signal<string> = this.store.activeEpisodeMessage;
 
   constructor() {
     this.store.useFilm(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));

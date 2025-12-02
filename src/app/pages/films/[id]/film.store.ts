@@ -104,7 +104,7 @@ export class FilmStore {
     const ep = this.activeEpisode();
 
     if (!ep) {
-      return '';
+      return 'No active episode';
     }
 
     switch (ep.status) {
