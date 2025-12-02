@@ -1,0 +1,161 @@
+<div class="w-full flex flex-row justify-between items-end gap-4 md:gap-8">
+  <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">{{ film().title }}</h1>
+
+  <div class="w-fit flex flex-row justify-between items-center gap-2 md:gap-4">
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button (click)="onEditFilmInfo()"
+              z-button
+              zType="default"
+              class="flex flex-row justify-between items-center gap-2">
+        <z-icon zType="settings" zSize="xl"></z-icon>
+        <span class="hidden sm:block">Edit info</span>
+      </button>
+    }
+
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button (click)="onDeleteFilm()"
+              z-button
+              zType="destructive"
+              class="flex flex-row justify-between items-center gap-2">
+        <z-icon zType="trash" zSize="xl"></z-icon>
+        <span class="hidden sm:block">Delete</span>
+      </button>
+    }
+  </div>
+</div>
+
+<div class="mt-6 flex gap-12 flex-wrap">
+  <img src="/no-film-poster-vertical.png" alt="Film poster" class="rounded-lg h-auto max-h-96 w-auto"/>
+
+  <div class="flex flex-col gap-5">
+    <div>
+      <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Average rating</p>
+      <div class="mt-2 flex flex-row items-center gap-2 sm:gap-4">
+        <app-star-rating-bar [rating]="film().totalRating" [disableHovering]="true"/>
+        <p class="font-bold text-base">{{ film().totalRating }}</p>
+      </div>
+    </div>
+
+    @if (auth.role() === UserRoleDto.VIEWER) {
+      <div>
+        <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Your rating</p>
+        <div class="mt-2 flex flex-row items-center gap-2 sm:gap-4">
+          <app-star-rating-bar [rating]="userRating()" (changeRating)="onSetUserRating($event)"/>
+          <p class="font-bold text-base">{{ userRating() }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="mt-6">
+  <p class="text-muted-foreground text-xl leading-relaxed tracking-wide">Description</p>
+  <p class="mt-2 text-md leading-relaxed">
+    {{ film().description }}
+  </p>
+</div>
+
+<div class="my-16">
+  @if (dubbingList().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
+    <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Dubbing</p>
+  }
+
+  <div class="flex items-center gap-1 sm:gap-2 gap-y-2 flex-wrap">
+    @for (dubbing of dubbingList(); track dubbing.id) {
+      @if (auth.role() == UserRoleDto.CONTENT_MANAGER) {
+        <button z-button
+                [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
+                (click)="onSetActiveDubbing(dubbing.id)"
+                z-dropdown
+                [zDropdownMenu]="menu"
+                zTrigger="contextmenu"
+                zDirection="right"
+        >
+          {{ dubbing.name }}
+        </button>
+        <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+          <z-dropdown-menu-item (click)="onEditDubbing(dubbing)">
+            Edit
+          </z-dropdown-menu-item>
+          <z-divider zSpacing="sm" class="-mx-1"/>
+          <z-dropdown-menu-item (click)="onDeleteDubbing(dubbing)">
+            Delete
+          </z-dropdown-menu-item>
+        </z-dropdown-menu-content>
+      } @else {
+        <button z-button
+                [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
+                (click)="onSetActiveDubbing(dubbing.id)"
+        >
+          {{ dubbing.name }}
+        </button>
+      }
+    }
+    @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+      <button z-button zType="default" (click)="onAddNewDubbing()">Add new Dubbing</button>
+    } @else if (dubbingList().length === 0) {
+      <p class="text-3xl w-full text-center p-16">No content yet...</p>
+    }
+  </div>
+
+  @if (dubbingList().length > 0) {
+    <div class="mt-8">
+      <div>
+        @let link = activeEpisodeLink();
+        @if (link) {
+          <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
+        } @else if (activeEpisodes().length > 0) {
+          <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() }}</p>
+        }
+      </div>
+
+      <div class="mt-8">
+        @if (activeEpisodes().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
+          <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Episodes</p>
+        }
+
+        <div class="flex items-center gap-1 sm:gap-2 gap-y-2 flex-wrap">
+          @for (episode of activeEpisodes(); track episode.id) {
+            @let episodeTitle = episode.title || 'Episode ' + ($index + 1);
+
+            @if (auth.role() == UserRoleDto.CONTENT_MANAGER) {
+              <button z-button
+                      [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                      (click)="onSetActiveEpisode(episode.id)"
+                      z-dropdown
+                      [zDropdownMenu]="menu"
+                      zTrigger="contextmenu"
+                      zDirection="right"
+              >
+                {{ episodeTitle }}
+              </button>
+              <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+                <z-dropdown-menu-item (click)="onEditEpisode(episode)">
+                  Edit
+                </z-dropdown-menu-item>
+                <z-divider zSpacing="sm" class="-mx-1"/>
+                <z-dropdown-menu-item (click)="onDeleteEpisode(episode)">
+                  Delete
+                </z-dropdown-menu-item>
+              </z-dropdown-menu-content>
+            } @else {
+              <button z-button
+                      [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                      (click)="onSetActiveEpisode(episode.id)"
+              >
+                {{ episodeTitle }}
+              </button>
+            }
+          }
+          @if (auth.role() === UserRoleDto.CONTENT_MANAGER) {
+            <button z-button zType="default" (click)="onAddNewEpisode()">Add new Episode</button>
+          } @else if (activeEpisodes().length === 0) {
+            <p class="text-3xl w-full text-center p-16">No episodes yet...</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<app-comments-section [filmId]="film().id"></app-comments-section>

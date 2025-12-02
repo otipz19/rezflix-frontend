@@ -21,7 +21,7 @@ export class ZardDropdownDirective implements OnInit {
   protected readonly dropdownService = inject(ZardDropdownService);
 
   readonly zDropdownMenu = input<ZardDropdownMenuContentComponent>();
-  readonly zTrigger = input<'click' | 'hover'>('click');
+  readonly zTrigger = input<'click' | 'hover' | 'contextmenu'>('click');
   readonly zDisabled = input<boolean>(false);
 
   readonly zDirection = input<'left' | 'right'>('right');
@@ -32,6 +32,19 @@ export class ZardDropdownDirective implements OnInit {
     if (!element.hasAttribute('aria-label') && !element.hasAttribute('aria-labelledby')) {
       const label = element.textContent?.trim();
       element.setAttribute('aria-label', label?.length ? label : 'Open menu');
+    }
+  }
+
+  @HostListener('contextmenu', ['$event'])
+  onContextmenu(event: Event) {
+    if (this.zDisabled() || this.zTrigger() !== 'contextmenu') return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const menuContent = this.zDropdownMenu();
+    if (menuContent) {
+      this.dropdownService.toggle(this.elementRef, menuContent?.contentTemplate?.(), this.viewContainerRef, this.zDirection());
     }
   }
 

@@ -4,7 +4,7 @@ import {injectDispatch} from '@ngrx/signals/events';
 import {filmsPageEvents} from './state/events';
 import {FilmDto} from '../../../api';
 import {FilmCardComponent} from './components/film-card/film-card.component';
-import {SearchBarComponent} from './components/search-bar/search-bar.component';
+import {SearchBarComponent} from '@shared/components/search-bar/search-bar.component';
 import {catchError, debounceTime, distinctUntilChanged, EMPTY, Subject} from 'rxjs';
 import {PaginatorComponent} from '@shared/components/paginator/paginator.component';
 import {PaginationChangedEvent} from '@shared/components/paginator/pagination-changed-event';

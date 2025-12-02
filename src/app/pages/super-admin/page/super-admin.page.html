@@ -1,0 +1,36 @@
+<section class="mt-8 w-full">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex flex-col sm:flex-row gap-4 items-center justify-between mb-6">
+      <div class="flex items-center gap-3 w-full">
+                <button z-button class="rounded-lg" (click)="openCreateUser()" aria-label="Create user">
+          <z-icon zType="plus"></z-icon>
+        </button>
+        <app-search-bar class="flex-5" (queryChanged)="onQueryChanged($event)" placeholder="Search users..."/>
+        <app-type-selector class="flex-2" (typeChanged)="onTypeChanged($event)"></app-type-selector>
+      </div>
+    </div>
+
+    @if (!isLoading()) {
+      @if (users().length > 0) {
+        <div class="grid grid-cols-1 gap-4">
+          @for (u of users(); track u.id) {
+            <app-user-card [user]="u"/>
+          }
+        </div>
+
+        <div class="mt-6 w-full flex justify-center items-center">
+          <app-paginator
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [totalItems]="total()"
+            (paginationChanged)="onPageChanged($event)"
+          />
+        </div>
+      } @else {
+        <p class="text-4xl mx-auto w-fit my-16 text-center">No users were found</p>
+      }
+    } @else {
+      <p class="text-center">Loading...</p>
+    }
+  </div>
+</section>

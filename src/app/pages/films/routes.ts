@@ -17,6 +17,6 @@ export const FILMS_ROUTES: Routes = [
   {
     path: `:${FILM_ID_ROUTE_PARAM}`,
     resolve: {[RESOLVE_FILM_KEY]: resolveFilm},
-    loadComponent: () => import('./[id]/edit/film.page').then(m => m.FilmPage)
+    loadComponent: () => import('./[id]/film.page').then(m => m.FilmPage)
   }
 ]
