@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, outpu
              (mouseenter)="onMouseEnter($index)"
              (click)="changeRating.emit($index + 1)"
              alt="Star icon"
-             class="size-6 object-contain"
+             [class]="sizeCs() + ' object-contain'"
         />
       }
     </div>
@@ -21,6 +21,7 @@ export class StarRatingBarComponent {
   readonly rating = input.required<number>();
   readonly totalStars = input<number>(5);
   readonly disableHovering = input<boolean>(false);
+  readonly sizeCs = input<string>('size-6');
 
   readonly changeRating = output<number>();
 

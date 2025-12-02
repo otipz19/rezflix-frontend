@@ -20,6 +20,7 @@ import {DeleteEpisodeService} from './services/delete-episode.service';
 import {StarRatingBarComponent} from './components/star-rating-bar/star-rating-bar.component';
 import {FilmUserRatingStore} from './film-user-rating.store';
 import {FilmUserRatingService} from './services/film-user-rating.service';
+import {CommentsSectionComponent} from './components/comments-section/comments-section.component';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -33,6 +34,7 @@ import {FilmUserRatingService} from './services/film-user-rating.service';
     ZardDropdownMenuContentComponent,
     ZardDropdownMenuItemComponent,
     StarRatingBarComponent,
+    CommentsSectionComponent,
   ],
   providers: [FilmStore, FilmUserRatingStore]
 })

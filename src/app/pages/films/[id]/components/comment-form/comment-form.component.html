@@ -1,0 +1,11 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <app-form-input [control]="form.controls.text"
+                  label="Post your comment"
+                  type="textarea"
+                  placeholder="Very cool movie..."
+  />
+
+  <button z-button zType="default" class="w-full sm:w-xs block ml-auto mt-4">
+    Post
+  </button>
+</form>

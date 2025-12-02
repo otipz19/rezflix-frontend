@@ -55,7 +55,7 @@
   </p>
 </div>
 
-<div class="mt-16">
+<div class="my-16">
   @if (dubbingList().length > 0 || auth.role() === UserRoleDto.CONTENT_MANAGER) {
     <p class="text-muted-foreground text-xl leading-relaxed tracking-wide mb-4">Dubbing</p>
   }
@@ -157,3 +157,5 @@
     </div>
   }
 </div>
+
+<app-comments-section [filmId]="film().id"></app-comments-section>
