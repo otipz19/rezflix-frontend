@@ -1,14 +1,15 @@
 import {ChangeDetectionStrategy, Component, inject, Signal} from '@angular/core';
-import {DubbingDto, FilmDto} from '../../../../api';
+import {DubbingDto, EpisodeDto, FilmDto} from '../../../../api';
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_FILM_KEY} from '../film.resolver';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {EditFilmInfoService} from './services/edit-film-info.service';
 import {DeleteFilmService} from './services/delete-film.service';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {Router} from '@angular/router';
 import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
+import {UpsertEpisodeService} from './dubbing/[id]/services/upsert-episode.service';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -17,25 +18,33 @@ import {UpsertDubbingService} from './services/upsert-dubbing.service';
   imports: [
     ZardButtonComponent,
     ZardIconComponent,
-    RouterLink,
-    RouterOutlet
   ],
   providers: [FilmStore]
 })
 export class FilmEditPage {
   private readonly store = inject(FilmStore);
+  private readonly router = inject(Router);
+
   private readonly editFilmInfoService = inject(EditFilmInfoService);
   private readonly deleteFilmService = inject(DeleteFilmService);
   private readonly upsertDubbingService = inject(UpsertDubbingService);
-  private readonly router = inject(Router);
+  private readonly upsertEpisodeService = inject(UpsertEpisodeService);
 
   protected readonly film: Signal<FilmDto> = this.store.film;
   protected readonly dubbingList: Signal<DubbingDto[]> = this.store.dubbingList;
-  protected readonly isLoadingDubbing: Signal<boolean> = this.store.isLoadingDubbingList;
+
+  protected readonly isLoading: Signal<boolean> = this.store.isLoading;
+
+  protected readonly activeDubbingId: Signal<DubbingDto['id'] | undefined> = this.store.activeDubbingId;
+  protected readonly activeEpisodeId: Signal<EpisodeDto['id'] | undefined> = this.store.activeEpisodeId;
+  protected readonly activeEpisodes: Signal<EpisodeDto[]> = this.store.activeEpisodes;
+
+  protected readonly activeEpisodeLink: Signal<string | undefined> = this.store.activeEpisodeLink;
+  protected readonly activeEpisodeMessage: Signal<string | undefined> = this.store.activeEpisodeMessage;
 
   constructor() {
     this.store.useFilm(getFromRoute<FilmDto>(RESOLVE_FILM_KEY));
-    this.store.loadDubbingList();
+    this.store.loadDubbingListWithEpisodes();
   }
 
   protected onEditFilmInfo() {
@@ -50,6 +59,24 @@ export class FilmEditPage {
 
   protected onAddNewDubbing() {
     this.upsertDubbingService.create$(this.film().id)
-      .subscribe(() => this.store.loadDubbingList());
+      // TODO: prevent full reload
+      .subscribe(() => this.store.loadDubbingListWithEpisodes());
+  }
+
+  protected onAddNewEpisode() {
+    const activeDubId = this.activeDubbingId();
+    if(activeDubId) {
+      this.upsertEpisodeService.create$(activeDubId, this.store.lastWatchOrder())
+        // TODO: prevent full reload
+        .subscribe(() => this.store.loadDubbingListWithEpisodes());
+    }
+  }
+
+  protected onSetActiveDubbing(dubbingId: DubbingDto['id']) {
+    this.store.setActiveDubbing(dubbingId);
+  }
+
+  protected onSetActiveEpisode(episodeId: EpisodeDto['id']) {
+    this.store.setActiveEpisode(episodeId);
   }
 }

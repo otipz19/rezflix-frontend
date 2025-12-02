@@ -44,12 +44,36 @@
 <div class="mt-16">
   <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
     @for (dubbing of dubbingList(); track dubbing.id) {
-      <a z-button zType="outline" [routerLink]="['dubbing', dubbing.id]">{{ dubbing.name }}</a>
+      <button z-button
+              [zType]="activeDubbingId() == dubbing.id ? 'default' : 'outline'"
+              (click)="onSetActiveDubbing(dubbing.id)">
+        {{ dubbing.name }}
+      </button>
     }
     <button z-button zType="default" (click)="onAddNewDubbing()">Add new dubbing</button>
   </div>
 
   <div class="mt-8">
-    <router-outlet></router-outlet>
+    <div>
+      @let link = activeEpisodeLink();
+      @if (link) {
+        <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
+      } @else {
+        <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() || 'No active episode' }}</p>
+      }
+    </div>
+
+    <div class="mt-8">
+      <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+        @for (episode of activeEpisodes(); track episode.id) {
+          <button z-button
+                  [zType]="activeEpisodeId() == episode.id ? 'default' : 'outline'"
+                  (click)="onSetActiveEpisode(episode.id)">
+            {{ episode.title }}
+          </button>
+        }
+        <button z-button zType="default" (click)="onAddNewEpisode()">Add new episode</button>
+      </div>
+    </div>
   </div>
 </div>
