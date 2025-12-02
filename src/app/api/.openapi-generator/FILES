@@ -14,6 +14,7 @@ api/filmEpisodeController.service.ts
 api/filmRatingController.service.ts
 api/filmRecommendationsController.service.ts
 api/userController.service.ts
+api/watchRoomController.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -25,6 +26,7 @@ model/createCommentDto.ts
 model/createDubbingDto.ts
 model/createEpisodeRequest.ts
 model/createUserDto.ts
+model/createWatchRoomDto.ts
 model/currentUserInfoDto.ts
 model/dubbingCriteriaDto.ts
 model/dubbingDto.ts

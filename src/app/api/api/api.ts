@@ -20,4 +20,6 @@ export * from './filmRecommendationsController.service';
 import { FilmRecommendationsControllerService } from './filmRecommendationsController.service';
 export * from './userController.service';
 import { UserControllerService } from './userController.service';
-export const APIS = [AuthenticationControllerService, CacheControllerService, FileControllerService, FilmCollectionControllerService, FilmCommentControllerService, FilmControllerService, FilmDubbingControllerService, FilmEpisodeControllerService, FilmRatingControllerService, FilmRecommendationsControllerService, UserControllerService];
+export * from './watchRoomController.service';
+import { WatchRoomControllerService } from './watchRoomController.service';
+export const APIS = [AuthenticationControllerService, CacheControllerService, FileControllerService, FilmCollectionControllerService, FilmCommentControllerService, FilmControllerService, FilmDubbingControllerService, FilmEpisodeControllerService, FilmRatingControllerService, FilmRecommendationsControllerService, UserControllerService, WatchRoomControllerService];

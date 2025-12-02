@@ -5,6 +5,7 @@ export * from './createCommentDto';
 export * from './createDubbingDto';
 export * from './createEpisodeRequest';
 export * from './createUserDto';
+export * from './createWatchRoomDto';
 export * from './currentUserInfoDto';
 export * from './dubbingCriteriaDto';
 export * from './dubbingDto';
