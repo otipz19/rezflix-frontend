@@ -4,6 +4,8 @@ import {unauthenticatedRouteGuard} from './core/auth/route-guards/unauthenticate
 import {FILMS_ROUTES} from './pages/films/routes';
 import {NotFoundPage} from './pages/not-found/page/not-found.page';
 import {ForbiddenPage} from './pages/forbidden/page/forbidden.page';
+import {hasRoleRouteGuard} from './core/auth/route-guards/has-role-route.guard';
+import {UserRoleDto} from './api';
 
 export const routes: Routes = [
   {
@@ -21,6 +23,7 @@ export const routes: Routes = [
       },
       {
         path: 'super-admin',
+        canActivate: [hasRoleRouteGuard(UserRoleDto.SUPER_ADMIN)],
         loadChildren: () => import('./pages/super-admin/routes').then(r => r.SUPER_ADMIN_ROUTES)
       },
       {
