@@ -123,6 +123,14 @@
         @let link = activeEpisodeLink();
         @if (link) {
           <video controls [src]="link" type="application/vnd.apple.mpegurl"></video>
+
+          @if (auth.role() === UserRoleDto.VIEWER) {
+            <button (click)="onCreateWatchRoom()"
+                    z-button
+                    class="mt-5">
+              Create watch room
+            </button>
+          }
         } @else if (activeEpisodes().length > 0) {
           <p class="text-3xl w-full text-center p-16">{{ activeEpisodeMessage() }}</p>
         }

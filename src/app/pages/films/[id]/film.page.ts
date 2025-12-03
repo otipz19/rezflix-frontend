@@ -1,11 +1,16 @@
 import {ChangeDetectionStrategy, Component, inject, Signal} from '@angular/core';
-import {DubbingDto, EpisodeDto, FilmDto, UserRoleDto} from '../../../api';
+import {CreateWatchRoomDto, DubbingDto, EpisodeDto, FilmDto, UserRoleDto} from '../../../api';
 import {getFromRoute} from '@shared/routing/get-from-route';
 import {RESOLVE_FILM_KEY} from './film.resolver';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {ZardIconComponent} from '@shared/zardui/components/icon/icon.component';
 import {EditFilmInfoService} from './services/edit-film-info.service';
 import {DeleteFilmService} from './services/delete-film.service';
+import {DialogService} from '../../../core/dialog/services/dialog.service';
+import {WatchRoomControllerService} from '../../../api';
+import {WatchRoomService} from '../../../core/watchroom/watch-room.service';
+import {NotifyService} from '../../../core/notify/services/notify.service';
+import {CreateWatchRoomFormComponent} from './components/create-watchroom-form/create-watchroom-form.component';
 import {Router} from '@angular/router';
 import {FilmStore} from "./film.store";
 import {UpsertDubbingService} from './services/upsert-dubbing.service';
@@ -24,6 +29,7 @@ import {CommentsSectionComponent} from './components/comments-section/comments-s
 import {UploadFilmPosterService} from './services/upload-film-poster.service';
 import {ImageFileStore} from '../../../core/image/image-file.store';
 import {FilmPosterLoaderDirective} from '../../../core/image/directives/film-poster-loader.directive';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -50,6 +56,10 @@ export class FilmPage {
 
   private readonly editFilmInfoService = inject(EditFilmInfoService);
   private readonly deleteFilmService = inject(DeleteFilmService);
+  private readonly dialogService = inject(DialogService);
+  private readonly watchRoomApi = inject(WatchRoomControllerService);
+  private readonly watchRoomService = inject(WatchRoomService);
+  private readonly notify = inject(NotifyService);
   private readonly upsertDubbingService = inject(UpsertDubbingService);
   private readonly upsertEpisodeService = inject(UpsertEpisodeService);
   private readonly deleteDubbingService = inject(DeleteDubbingService);
@@ -146,6 +156,42 @@ export class FilmPage {
   protected onEditPoster() {
     this.uploadFilmPosterService.upload$(this.film().id)
       .subscribe(() => this.imageStore.loadNewFilmPoster(this.film().id));
+  }
+
+  protected onCreateWatchRoom() {
+    const episodeId = this.activeEpisodeId();
+    if (!episodeId) {
+      this.notify.showErrorToast('Please select an episode first');
+      return;
+    }
+
+    let createdPassword: string | undefined;
+    this.dialogService.upsert$(
+      {
+        zContent: CreateWatchRoomFormComponent,
+        zData: { episodeId },
+        zTitle: 'Create watch room',
+        zOkText: 'Create'
+      },
+      (formValue: CreateWatchRoomDto) => {
+        createdPassword = formValue.password;
+        return this.watchRoomApi.createWatchRoom(formValue).pipe(
+          this.notify.notifyHttpError()
+        );
+      }
+    ).subscribe((roomId: string) => {
+      try {
+        this.watchRoomService.connect(roomId, createdPassword);
+        this.watchRoomService.error$.pipe(take(1)).subscribe(err => {
+          this.notify.showErrorToast(err ?? undefined);
+        });
+        this.watchRoomService.init$.pipe(take(1)).subscribe(room => {
+          this.router.navigate(['/watch-room']);
+        });
+      } catch (e) {
+        this.notify.showErrorToast();
+      }
+    });
   }
 
   protected readonly UserRoleDto = UserRoleDto;

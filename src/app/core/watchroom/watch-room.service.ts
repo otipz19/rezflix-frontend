@@ -26,7 +26,7 @@ export class WatchRoomService {
   public readonly chat$ = this.chatSubject.asObservable();
   public readonly error$ = this.errorSubject.asObservable();
 
-  connect(roomId: string, roomPassword: string | null = null, wsUrl = 'ws://localhost:8080/watch-room-ws') {
+  connect(roomId: string, roomPassword: string | undefined = undefined, wsUrl = 'ws://localhost:8080/watch-room-ws') {
     if (this.rxStomp) {
       this.disconnect();
     }
@@ -43,15 +43,17 @@ export class WatchRoomService {
       },
       reconnectDelay: 0,
     });
+    rx.activate();
 
+    this.rxStomp = rx;
+    this.connectedRoomId = roomId;
+
+    const originalOnStompError = rx.stompClient.onStompError;
     rx.stompClient.onStompError = (frame: any) => {
+      if (originalOnStompError) originalOnStompError(frame);
       const hdrMsg = frame.headers?.message ?? null;
       this.errorSubject.next(hdrMsg);
     };
-
-    rx.activate();
-    this.rxStomp = rx;
-    this.connectedRoomId = roomId;
 
     this.initSub = rx.watch(`/rezflix/watch-room/${roomId}/init`).subscribe((msg) => {
       try {
