@@ -5,7 +5,16 @@
   <h1 class="text-3xl w-full text-center mt-48">Awaiting active watch room...</h1>
 } @else {
   <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">Watch Room</h1>
-  <h2 class="mt-4 mb-8 w-fit text-lg text-muted-foreground font-bold">Room id: {{ roomId }}</h2>
+  <div class="mt-4 mb-6 flex items-center gap-2">
+    <span class="text-lg text-muted-foreground font-bold">Room Id:</span>
+    <button z-button zType="outline"
+            [cdkCopyToClipboard]="roomId"
+            (cdkCopyToClipboardCopied)="onCopiedRoomId()"
+    >
+      {{ roomId }}
+    </button>
+  </div>
+
 
   <div class="grid grid-cols-12 gap-4 w-full h-fit">
 

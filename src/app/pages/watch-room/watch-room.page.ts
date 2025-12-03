@@ -17,6 +17,8 @@ import {ZardFormControlComponent} from '@shared/zardui/components/form/form.comp
 import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
 import {environment} from '../../../environments/environment';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import {NotifyService} from '../../core/notify/services/notify.service';
 
 @Component({
   selector: 'app-watch-room',
@@ -26,13 +28,15 @@ import {environment} from '../../../environments/environment';
     FormsModule,
     ZardFormControlComponent,
     ZardInputDirective,
-    ZardButtonComponent
+    ZardButtonComponent,
+    ClipboardModule
   ],
 })
 export class WatchRoomPage implements OnInit {
   private readonly watchRoomService = inject(WatchRoomService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly auth = inject(AuthService);
+  private readonly notify = inject(NotifyService);
   protected readonly baseUrl = environment.basePath;
 
   private readonly videoEl = viewChild.required<ElementRef<HTMLVideoElement>>('video');
@@ -122,5 +126,9 @@ export class WatchRoomPage implements OnInit {
     setTimeout(() => {
       document.querySelector('[data-last="true"]')?.scrollIntoView();
     });
+  }
+
+  protected onCopiedRoomId() {
+    this.notify.showSuccessToast('Copied room id!');
   }
 }
