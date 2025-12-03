@@ -57,18 +57,25 @@ export class WatchRoomPage implements OnInit {
     } else {
       this.watchRoomService.sync$
         .pipe(
-          takeUntilDestroyed(this.destroyRef)
+          takeUntilDestroyed(this.destroyRef),
         )
         .subscribe(state => {
           const videoEl = this.videoEl().nativeElement;
           const stateTime = state.episodePositionMs / 1000;
           if (state.paused) {
-            videoEl.pause();
             videoEl.currentTime = stateTime;
+            videoEl.pause();
           } else {
-            videoEl.play();
             if (Math.abs(videoEl.currentTime - stateTime) > 0.2) {
               videoEl.currentTime = stateTime;
+            }
+
+            try {
+              videoEl.play().then(() => console.log('Played')).catch(() => {
+                // Ignore errors
+              });
+            } catch {
+              // Ignore errors
             }
           }
         });

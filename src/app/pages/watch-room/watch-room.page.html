@@ -7,9 +7,9 @@
   <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">Watch Room</h1>
   <h2 class="mt-4 mb-8 w-fit text-lg text-muted-foreground font-bold">Room id: {{ roomId }}</h2>
 
-  <div class="grid grid-cols-12 gap-4 w-full">
+  <div class="grid grid-cols-12 gap-4 w-full h-fit">
 
-    <div class="col-span-12 md:col-span-9">
+    <div class="col-span-12 md:col-span-9 h-full">
       <video #video
              class="w-full rounded-lg aspect-video bg-black"
              [controls]="isHost()"
@@ -22,7 +22,7 @@
       </video>
     </div>
 
-    <div class="col-span-12 md:col-span-3 border rounded-lg bg-card flex flex-col">
+    <div class="col-span-12 md:col-span-3 border rounded-lg bg-card flex flex-col overflow-y-auto md:h-0 md:min-h-full [&::-webkit-scrollbar]:w-0">
       <div class="p-3 border-b">
         <h2 class="text-sm font-bold text-muted-foreground uppercase tracking-wide">Chat</h2>
       </div>
