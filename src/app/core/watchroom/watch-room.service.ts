@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {
   ConnectWatchRoomFormValue
 } from '../../pages/components/connect-watchroom-form/connect-watchroom-form.component';
+import {environment} from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class WatchRoomService {
@@ -56,7 +57,7 @@ export class WatchRoomService {
     }
   }
 
-  connect(roomId: string, roomPassword: string | undefined = undefined, wsUrl = 'ws://localhost:8080/watch-room-ws') {
+  connect(roomId: string, roomPassword: string | undefined = undefined, wsUrl = `${environment.baseWsPath}/watch-room-ws`) {
     if (this.rxStomp) {
       this.disconnect();
     }
