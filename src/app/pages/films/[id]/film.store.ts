@@ -13,6 +13,7 @@ import {
 import {NotifyService} from '../../../core/notify/services/notify.service';
 import {catchError, finalize, forkJoin, map, of, switchMap, tap} from 'rxjs';
 import {AuthService} from '../../../core/auth/services/auth.service';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class FilmStore {
@@ -99,7 +100,7 @@ export class FilmStore {
   readonly activeEpisodeLink = computed(() => {
     const activeEp = this.activeEpisode();
     if (activeEp && activeEp.hlsLink) {
-      return 'http://localhost:8080' + activeEp.hlsLink;
+      return environment.basePath + activeEp.hlsLink;
     }
     return undefined;
   });

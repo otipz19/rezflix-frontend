@@ -13,7 +13,7 @@
       <video #video
              class="w-full rounded-lg aspect-video bg-black"
              [controls]="isHost()"
-             [src]="'http://localhost:8080' + room.hlsLink"
+             [src]="baseUrl + room.hlsLink"
              type="application/vnd.apple.mpegurl"
              (pause)="onControlsChange($event)"
              (play)="onControlsChange($event)"

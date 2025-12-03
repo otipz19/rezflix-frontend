@@ -16,6 +16,7 @@ import {FormsModule} from '@angular/forms';
 import {ZardFormControlComponent} from '@shared/zardui/components/form/form.component';
 import {ZardInputDirective} from '@shared/zardui/components/input/input.directive';
 import {ZardButtonComponent} from '@shared/zardui/components/button/button.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-watch-room',
@@ -32,6 +33,7 @@ export class WatchRoomPage implements OnInit {
   private readonly watchRoomService = inject(WatchRoomService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly auth = inject(AuthService);
+  protected readonly baseUrl = environment.basePath;
 
   private readonly videoEl = viewChild.required<ElementRef<HTMLVideoElement>>('video');
 

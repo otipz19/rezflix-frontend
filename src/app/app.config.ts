@@ -6,12 +6,14 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from './core/auth/interceptors/auth.interceptor';
 import {restoreSessionProvider} from './core/auth/providers/restore-session.provider';
 import {languageInterceptor} from './core/localization/interceptors/language.interceptor';
+import {apiConfigProvider} from './api/config/api-config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, languageInterceptor])),
+    apiConfigProvider,
     restoreSessionProvider
   ]
 };
