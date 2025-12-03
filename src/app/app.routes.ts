@@ -6,6 +6,7 @@ import {NotFoundPage} from './pages/not-found/page/not-found.page';
 import {ForbiddenPage} from './pages/forbidden/page/forbidden.page';
 import {hasRoleRouteGuard} from './core/auth/route-guards/has-role-route.guard';
 import {UserRoleDto} from './api';
+import {anonymousOrViewerRouteGuard} from './core/auth/route-guards/anonymous-or-viewer.route-guard';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,7 @@ export const routes: Routes = [
       },
       {
         path: 'watch-room',
-        canActivate: [hasRoleRouteGuard(UserRoleDto.VIEWER)],
+        canActivate: [anonymousOrViewerRouteGuard],
         loadComponent: () => import('./pages/watch-room/watch-room.page').then(r => r.WatchRoomPage)
       },
       {
