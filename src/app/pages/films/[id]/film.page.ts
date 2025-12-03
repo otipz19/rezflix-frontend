@@ -21,6 +21,9 @@ import {StarRatingBarComponent} from '@shared/components/star-rating-bar/star-ra
 import {FilmUserRatingStore} from './film-user-rating.store';
 import {FilmUserRatingService} from './services/film-user-rating.service';
 import {CommentsSectionComponent} from './components/comments-section/comments-section.component';
+import {UploadFilmPosterService} from './services/upload-film-poster.service';
+import {ImageFileStore} from '../../../core/image/image-file.store';
+import {FilmPosterLoaderDirective} from '../../../core/image/directives/film-poster-loader.directive';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -35,6 +38,7 @@ import {CommentsSectionComponent} from './components/comments-section/comments-s
     ZardDropdownMenuItemComponent,
     StarRatingBarComponent,
     CommentsSectionComponent,
+    FilmPosterLoaderDirective,
   ],
   providers: [FilmStore, FilmUserRatingStore]
 })
@@ -50,9 +54,12 @@ export class FilmPage {
   private readonly upsertEpisodeService = inject(UpsertEpisodeService);
   private readonly deleteDubbingService = inject(DeleteDubbingService);
   private readonly deleteEpisodeService = inject(DeleteEpisodeService);
+  private readonly uploadFilmPosterService = inject(UploadFilmPosterService);
 
   private readonly ratingStore = inject(FilmUserRatingStore);
   private readonly ratingService = inject(FilmUserRatingService);
+
+  private readonly imageStore = inject(ImageFileStore);
 
   protected readonly film: Signal<FilmDto> = this.store.film;
   protected readonly dubbingList: Signal<DubbingDto[]> = this.store.dubbingList;
@@ -134,6 +141,11 @@ export class FilmPage {
         this.ratingStore.loadUserRating(this.film().id, rating);
         this.store.reloadFilm();
       });
+  }
+
+  protected onEditPoster() {
+    this.uploadFilmPosterService.upload$(this.film().id)
+      .subscribe(() => this.imageStore.loadNewFilmPoster(this.film().id));
   }
 
   protected readonly UserRoleDto = UserRoleDto;

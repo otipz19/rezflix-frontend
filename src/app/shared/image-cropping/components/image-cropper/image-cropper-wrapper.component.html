@@ -1,0 +1,11 @@
+@if (!imageFile) {
+  <app-image-dropzone (fileUpload)="onFileUpload($event)"/>
+} @else {
+  <button type="button" class="absolute top-6 right-6 cursor-pointer z-50" (click)="onRemoveImage()">✖</button>
+  <image-cropper
+    [imageFile]="imageFile"
+    [aspectRatio]="3/4"
+    format="png"
+    (imageCropped)="onImageCropped($event)"
+  ></image-cropper>
+}

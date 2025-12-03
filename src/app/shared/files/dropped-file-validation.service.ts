@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {EMPTY, Observable, of, switchMap} from 'rxjs';
 import {NotifyService} from '../../core/notify/services/notify.service';
-import {MAX_FILE_SIZE, VIDEO_TYPES} from '@shared/files/file-type-utils';
+import {IMAGE_TYPES, MAX_FILE_SIZE, VIDEO_TYPES} from '@shared/files/file-type-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,10 @@ export class DroppedFileValidationService {
 
   validateEpisodeFile$(file: File): Observable<File> {
     return this.validate$(file, VIDEO_TYPES);
+  }
+
+  validateImageFile$(file: File): Observable<File> {
+    return this.validate$(file, IMAGE_TYPES);
   }
 
   private validate$(file: File, fileTypes: readonly string[]): Observable<File> {

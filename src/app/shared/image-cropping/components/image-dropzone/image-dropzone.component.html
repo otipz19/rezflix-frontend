@@ -1,0 +1,11 @@
+<ngx-file-drop [multiple]="false"
+               [accept]="accept"
+               dropZoneClassName="drop-zone"
+               contentClassName="drop-zone-content"
+               (onFileDrop)="onDrop($event)">
+  <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+    <div class="relative w-full h-full flex flex-col justify-center items-center" (click)="openFileSelector()">
+      <span>Drop image file here</span>
+    </div>
+  </ng-template>
+</ngx-file-drop>

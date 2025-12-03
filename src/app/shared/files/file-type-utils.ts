@@ -5,4 +5,10 @@ export const VIDEO_TYPES: readonly string[] = [
   "video/mp4",
 ] as const;
 
+export const IMAGE_TYPES: readonly string[] = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+] as const;
+
 export const VIDEO_ICON_SRC = 'video-icon.png';
