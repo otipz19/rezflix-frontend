@@ -26,7 +26,8 @@
 
       @if (!auth.isAuthenticated() || auth.hasRole(UserRoleDto.VIEWER)) {
         <button (click)="onOpenConnectRoom()" z-button class="flex flex-row justify-between items-center gap-2">
-          <span class="hidden sm:block">Join watch room</span>
+          <z-icon zType="eye" zSize="xl"></z-icon>
+          <span class="hidden sm:block">Watch Together</span>
         </button>
       }
       <app-header-user-menu/>
