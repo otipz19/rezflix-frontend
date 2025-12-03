@@ -118,5 +118,9 @@ export class WatchRoomPage implements OnInit {
       next.push(dto);
       return next;
     });
+
+    setTimeout(() => {
+      document.querySelector('[data-last="true"]')?.scrollIntoView();
+    });
   }
 }

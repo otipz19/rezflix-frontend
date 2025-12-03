@@ -34,7 +34,7 @@
         [&::-webkit-scrollbar-thumb]:bg-[#D6C7FF]"
       >
         @for (msg of chat(); track $index) {
-          <div class="text-sm break-words">
+          <div class="text-sm break-words" [attr.data-last]="$last">
             <span class="font-bold text-primary mr-1">{{ msg.username || 'Anon' }}:</span>
             <span class="text-foreground/90">{{ msg.message }}</span>
           </div>
