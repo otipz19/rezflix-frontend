@@ -1,5 +1,5 @@
 export interface WatchRoomStateDto {
-  isPaused: boolean;
+  paused: boolean;
   episodePositionMs: number;
 }
 

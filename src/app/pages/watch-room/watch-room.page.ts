@@ -60,7 +60,7 @@ export class WatchRoomPage implements OnInit {
         .subscribe(state => {
           const videoEl = this.videoEl().nativeElement;
           const stateTime = state.episodePositionMs / 1000;
-          if (state.isPaused) {
+          if (state.paused) {
             videoEl.pause();
             videoEl.currentTime = stateTime;
           } else {
@@ -95,7 +95,7 @@ export class WatchRoomPage implements OnInit {
 
   private sendSyncVideo() {
     const videoEl = this.videoEl().nativeElement;
-    this.watchRoomService.sendSync({isPaused: videoEl.paused, episodePositionMs: videoEl.currentTime * 1000});
+    this.watchRoomService.sendSync({paused: videoEl.paused, episodePositionMs: videoEl.currentTime * 1000});
   }
 
   protected onSendMessage() {
