@@ -7,13 +7,51 @@
   <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">Watch Room</h1>
   <h2 class="mt-4 mb-8 w-fit text-lg text-muted-foreground font-bold">Room id: {{ roomId }}</h2>
 
-  <video #video
-         [controls]="isHost()"
-         [src]="'http://localhost:8080' + room.hlsLink"
-         type="application/vnd.apple.mpegurl"
-         (pause)="onControlsChange($event)"
-         (play)="onControlsChange($event)"
-         (seeked)="onControlsChange($event)"
-  >
-  </video>
+  <div class="grid grid-cols-12 gap-4 w-full">
+
+    <div class="col-span-12 md:col-span-9">
+      <video #video
+             class="w-full rounded-lg aspect-video bg-black"
+             [controls]="isHost()"
+             [src]="'http://localhost:8080' + room.hlsLink"
+             type="application/vnd.apple.mpegurl"
+             (pause)="onControlsChange($event)"
+             (play)="onControlsChange($event)"
+             (seeked)="onControlsChange($event)"
+      >
+      </video>
+    </div>
+
+    <div class="col-span-12 md:col-span-3 border rounded-lg bg-card flex flex-col">
+      <div class="p-3 border-b">
+        <h2 class="text-sm font-bold text-muted-foreground uppercase tracking-wide">Chat</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-3 space-y-3">
+        @for (msg of chat(); track $index) {
+          <div class="text-sm break-words">
+            <span class="font-bold text-primary mr-1">{{ msg.username || 'Anon' }}:</span>
+            <span class="text-foreground/90">{{ msg.message }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="p-3 border-t mt-auto">
+        <form (ngSubmit)="onSendMessage()">
+          <z-form-control>
+            <input name="input" z-input type="text"
+                   placeholder="Chat..."
+                   class="w-full text-sm"
+                   [(ngModel)]="chatField"
+            />
+          </z-form-control>
+
+          <button type="submit" z-button zType="outline" class="w-full mt-4">
+            Send message
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
 }
