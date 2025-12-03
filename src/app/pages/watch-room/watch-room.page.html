@@ -1,0 +1,19 @@
+@let roomId = $roomId();
+@let room = $room();
+
+@if (!roomId || !room) {
+  <h1 class="text-3xl w-full text-center mt-48">Awaiting active watch room...</h1>
+} @else {
+  <h1 class="mt-12 w-fit text-2xl font-bold sm:text-3xl">Watch Room</h1>
+  <h2 class="mt-4 mb-8 w-fit text-lg text-muted-foreground font-bold">Room id: {{ roomId }}</h2>
+
+  <video #video
+         [controls]="isHost()"
+         [src]="'http://localhost:8080' + room.hlsLink"
+         type="application/vnd.apple.mpegurl"
+         (pause)="onControlsChange($event)"
+         (play)="onControlsChange($event)"
+         (seeked)="onControlsChange($event)"
+  >
+  </video>
+}

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {MainLayout} from './pages/main.layout';
 import {unauthenticatedRouteGuard} from './core/auth/route-guards/unauthenticated.route-guard';
 import {FILMS_ROUTES} from './pages/films/routes';
@@ -20,6 +20,11 @@ export const routes: Routes = [
       {
         path: 'films',
         children: FILMS_ROUTES
+      },
+      {
+        path: 'watch-room',
+        canActivate: [hasRoleRouteGuard(UserRoleDto.VIEWER)],
+        loadComponent: () => import('./pages/watch-room/watch-room.page').then(r => r.WatchRoomPage)
       },
       {
         path: 'super-admin',

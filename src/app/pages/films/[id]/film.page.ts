@@ -29,7 +29,6 @@ import {CommentsSectionComponent} from './components/comments-section/comments-s
 import {UploadFilmPosterService} from './services/upload-film-poster.service';
 import {ImageFileStore} from '../../../core/image/image-file.store';
 import {FilmPosterLoaderDirective} from '../../../core/image/directives/film-poster-loader.directive';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-film-edit-page',
@@ -57,14 +56,16 @@ export class FilmPage {
   private readonly editFilmInfoService = inject(EditFilmInfoService);
   private readonly deleteFilmService = inject(DeleteFilmService);
   private readonly dialogService = inject(DialogService);
-  private readonly watchRoomApi = inject(WatchRoomControllerService);
-  private readonly watchRoomService = inject(WatchRoomService);
   private readonly notify = inject(NotifyService);
+
   private readonly upsertDubbingService = inject(UpsertDubbingService);
   private readonly upsertEpisodeService = inject(UpsertEpisodeService);
   private readonly deleteDubbingService = inject(DeleteDubbingService);
   private readonly deleteEpisodeService = inject(DeleteEpisodeService);
   private readonly uploadFilmPosterService = inject(UploadFilmPosterService);
+
+  private readonly watchRoomApi = inject(WatchRoomControllerService);
+  private readonly watchRoomService = inject(WatchRoomService);
 
   private readonly ratingStore = inject(FilmUserRatingStore);
   private readonly ratingService = inject(FilmUserRatingService);
@@ -120,7 +121,7 @@ export class FilmPage {
 
   protected onAddNewEpisode() {
     const activeDubId = this.activeDubbingId();
-    if(activeDubId) {
+    if (activeDubId) {
       this.upsertEpisodeService.create$(activeDubId, this.store.lastWatchOrder())
         // TODO: prevent full reload
         .subscribe(() => this.store.loadDubbingListWithEpisodes());
@@ -169,7 +170,7 @@ export class FilmPage {
     this.dialogService.upsert$(
       {
         zContent: CreateWatchRoomFormComponent,
-        zData: { episodeId },
+        zData: {episodeId},
         zTitle: 'Create watch room',
         zOkText: 'Create'
       },
@@ -179,19 +180,7 @@ export class FilmPage {
           this.notify.notifyHttpError()
         );
       }
-    ).subscribe((roomId: string) => {
-      try {
-        this.watchRoomService.connect(roomId, createdPassword);
-        this.watchRoomService.error$.pipe(take(1)).subscribe(err => {
-          this.notify.showErrorToast(err ?? undefined);
-        });
-        this.watchRoomService.init$.pipe(take(1)).subscribe(room => {
-          this.router.navigate(['/watch-room']);
-        });
-      } catch (e) {
-        this.notify.showErrorToast();
-      }
-    });
+    ).subscribe(roomId => this.watchRoomService.connectWithNavigation({roomId, password: createdPassword}));
   }
 
   protected readonly UserRoleDto = UserRoleDto;
